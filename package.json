@@ -8,8 +8,10 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@ustutt/grapheditor-webcomponent": "^0.4.0",
+    "aurelia-animator-css": "^1.0.4",
     "aurelia-bootstrapper": "^2.3.2",
-    "aurelia-animator-css": "^1.0.4"
+    "d3": "^5.15.0"
   },
   "devDependencies": {
     "aurelia-cli": "^1.2.3",
