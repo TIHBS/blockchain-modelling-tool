@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g>
+        <circle fill="white" stroke="black" cx="40" cy="25" r="20"/>
+        <path fill="white" stroke="black" d="M 0,90 l 5,-33 l 15,-12 l 5,-2 l 15,10 l 15,-10 l 5,2 l 15,12, l 5,33 z" />
+    </g>
+    <g transform="matrix(1,0,0,1,100,0)">
+        <circle fill="white" stroke="black" cx="30" cy="15" r="12" />
+        <polyline fill="none" stroke="black" points="30,27 30,60" />
+        <polyline fill="none" stroke="black" points="8,30 30,38 52,30" />
+        <polyline fill="none" stroke="black" points="18,90 30,60 42,90" />
+    </g>
+</svg>

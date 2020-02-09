@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g>
+        <rect fill="white" stroke="black" x="0" y="0" width="150" height="25" />
+        <rect fill="white" stroke="black" x="0" y="25" width="150" height="45" />
+        <rect fill="white" stroke="black" x="0" y="70" width="50" height="35" />
+        <rect fill="white" stroke="black" x="50" y="70" width="50" height="35" />
+        <rect fill="white" stroke="black" x="100" y="70" width="50" height="35" />
+        <text x="75" y="17" text-anchor="middle">
+            API
+        </text>
+        <text x="75" y="51" text-anchor="middle">
+            Business logic
+        </text>
+        <text x="3" y="83">
+            Adap. 1
+        </text>
+        <text x="53" y="83">
+            Adap. 2
+        </text>
+        <text x="103" y="83">
+            Adap. 3
+        </text>
+    </g>
+</svg>

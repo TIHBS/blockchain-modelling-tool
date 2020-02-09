@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g>
+        <polygon fill="white" stroke="black" stroke-linejoin="round" points="0,0 60,0 70,10 70,90 0,90"/>
+        <polygon fill="lightgrey" stroke="black" stroke-linejoin="round" points="60,0 60,10 70,10" />
+        <text x="5" y="25" width="60" height="50">Smart-Co.</text>
+    </g>
+    <g transform="translate(100)">
+        <rect fill="white" stroke="black" x="0" y="0" width="70" height="90" />
+        <text x="5" y="15" width="60" height="50">Tx 1</text>
+    </g>
+</svg>
