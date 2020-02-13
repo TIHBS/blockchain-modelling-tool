@@ -27,18 +27,18 @@ export default class ElementGenerator {
     return `import {bindable} from 'aurelia-framework';
 
 export class ${className} {
-  @bindable value;
+    @bindable value;
 
-  valueChanged(newValue, oldValue) {
-    //
-  }
+    valueChanged(newValue, oldValue) {
+      //
+    }
 }
 `;
   }
 
   generateHTMLSource(className) {
     return `<template>
-  <h1>\${value}</h1>
+    <h1>\${value}</h1>
 </template>
 `;
   }

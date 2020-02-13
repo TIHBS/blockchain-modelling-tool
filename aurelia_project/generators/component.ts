@@ -32,18 +32,18 @@ export default class ElementGenerator {
 
   generateJSSource(className) {
     return `export class ${className} {
-  message: string;
+    message: string;
 
-  constructor() {
-    this.message = 'Hello world';
-  }
+    constructor() {
+        this.message = 'Hello world';
+    }
 }
 `
   }
 
   generateHTMLSource(className) {
     return `<template>
-  <h1>\${message}</h1>
+    <h1>\${message}</h1>
 </template>
 `
   }
