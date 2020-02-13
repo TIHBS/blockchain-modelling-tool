@@ -1,0 +1,4 @@
+{
+  "name": "svg-element",
+  "description": "Creates a custom svg-element class and template (view model and view), placing them in the project source folder (or optionally in sub folders)."
+}

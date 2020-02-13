@@ -1,7 +1,25 @@
 <template>
-  <h2 class="f4 w-100 pa2 ma0 bg-black-20 shadow-2">Playground</h2>
+    <require from="../svg-elements/actor"></require>
+    <require from="../svg-elements/smart-contract"></require>
+    <require from="../svg-elements/transaction"></require>
 
-  <h3 class="f5 w-100 pa2 ma0">Elements</h3>
+    <h2 class="f4 w-100 pa2 ma0 bg-black-20 shadow-2">${state.activeProject}</h2>
 
-  <h3 class="f5 w-100 pa2 ma0">Properties</h3>
+    <h3 class="f5 w-100 pa2 ma0">Elements</h3>
+
+    <div>
+        <svg>
+            <g transform="scale(0.5)translate(5,5)" click.delegate="addActor()">
+                <actor translate="0,0"></actor>
+            </g>
+            <g transform="scale(0.5)translate(100,5)" click.delegate="addSmartContract()">
+                <smart-contract translate="0,0"></smart-contract>
+            </g>
+            <g transform="scale(0.5)translate(180,5)" click.delegate="addTransaction()">
+                <transaction translate="0,0"></transaction>
+            </g>
+        </svg>
+    </div>
+
+    <h3 class="f5 w-100 pa2 ma0">Properties</h3>
 </template>

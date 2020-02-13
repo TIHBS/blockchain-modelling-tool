@@ -5,6 +5,7 @@
     "root": "src",
     "resources": "resources",
     "elements": "resources/elements",
+    "svgElements": "resources/svg-elements",
     "attributes": "resources/attributes",
     "valueConverters": "resources/value-converters",
     "bindingBehaviors": "resources/binding-behaviors"

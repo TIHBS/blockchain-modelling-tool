@@ -1,8 +1,22 @@
 import {Redirect, NavigationInstruction, RouterConfiguration} from 'aurelia-router';
 import { PLATFORM } from 'aurelia-pal';
+import { autoinject } from 'aurelia-dependency-injection';
+import { Store } from 'aurelia-store';
+import { State } from './state';
 
+import { changeActiveProject } from './resources/state-actions/active-project-actions';
+import { addNode, removeNode, addEdge, removeEdge } from './resources/state-actions/active-diagram-actions';
+
+@autoinject()
 export class App {
-    public message: string = 'Hello World!';
+
+    constructor(private store: Store<State>) {
+        this.store.registerAction('changeActiveProject', changeActiveProject);
+        this.store.registerAction('addNode', addNode);
+        this.store.registerAction('removeNode', removeNode);
+        this.store.registerAction('addEdge', addEdge);
+        this.store.registerAction('removeEdge', removeEdge);
+    }
 
     configureRouter(config: RouterConfiguration): void {
         config.title = 'Blockchain Modelling Tool';
