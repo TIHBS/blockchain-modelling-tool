@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g>
+        <path fill="white" stroke="black" d="M0,10 a25,10 0 0,1 50,0 l 0,60 a25,10 0 0,1 -50,0 z" />
+        <ellipse fill="white" stroke="black" cx="25" cy="10" rx="25" ry="10" />
+        <text x="25" y="45" width="40" height="20" text-anchor="middle">
+            DB
+        </text>
+    </g>
+    <g transform="translate(100)">
+    </g>
+</svg>

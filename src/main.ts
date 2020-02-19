@@ -19,5 +19,10 @@ export function configure(aurelia: Aurelia) {
 
     aurelia.use.plugin(PLATFORM.moduleName('aurelia-store'), { initialState });
 
+    aurelia.use.plugin(PLATFORM.moduleName('aurelia-event-aggregator'));
+
+    // global resources
+    aurelia.use.globalResources(PLATFORM.moduleName('resources/value-converters/json'));
+
     aurelia.start().then(() => aurelia.setRoot(PLATFORM.moduleName('app')));
 }
