@@ -1,4 +1,43 @@
 <template>
-    <let node-content="${state[node] | json}"></let>
-    <pre>${nodeContent}</pre>
+    <details open="true">
+        <summary class="pa2 b">Visual Properties:</summary>
+        <form>
+            <div class="pa2 w-100">
+                <label>
+                    <span class="">Type:</span>
+                    <div class="mt2">
+                        <input class="w-100" name="type" type="text" value.bind="nodeEdit.type" input.delegate="nodeEditChanged() & debounce:300"/>
+                    </div>
+                </label>
+            </div>
+            <div class="pa2 w-100 inline-flex items-center">
+                <label class="pr1 flex-grow-1 inline-flex items-center">
+                    <span class="mr2">X:</span>
+                    <div class="flex-grow-1">
+                        <input class="w-100" name="x" type="number" value.bind="nodeEdit.x" input.delegate="nodeEditChanged() & debounce:300"/>
+                    </div>
+                </label>
+                <label class="pl1 flex-grow-1 inline-flex items-center">
+                    <span class="mr2">Y:</span>
+                    <div class="flex-grow-1">
+                        <input class="w-100" name="y" type="number" value.bind="nodeEdit.y" input.delegate="nodeEditChanged() & debounce:300"/>
+                    </div>
+                </label>
+            </div>
+        </form>
+    </details>
+
+    <details open="true">
+        <summary class="pa2 b">Element Properties:</summary>
+        <form>
+            <div class="pa2 w-100">
+                <label>
+                    <span class="">Title:</span>
+                    <div class="mt2">
+                        <input class="w-100" name="type" type="text" value.bind="componentEdit.title" input.delegate="componentEditChanged() & debounce:300"/>
+                    </div>
+                </label>
+            </div>
+        </form>
+    </details>
 </template>

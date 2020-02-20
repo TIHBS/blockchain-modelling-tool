@@ -6,7 +6,7 @@
 
     <require from="./node-properties"></require>
 
-    <h2 class="f4 w-100 pa2 ma0 bg-black-20 shadow-2">${state.activeProject}</h2>
+    <h2 class="f4 w-100 pa2 ma0 bg-black-20 shadow-2">${activeProject.activeProject}</h2>
 
     <h3 class="f5 w-100 pa2 ma0">Elements</h3>
 
@@ -31,5 +31,5 @@
 
     <p class="ph2" show.bind="!selectedNode">Select a Node…</p>
 
-    <node-properties if.bind="selectedNode" node.bind="selectedNode"></node-properties>
+    <node-properties if.bind="selectedNode"></node-properties>
 </template>

@@ -1,6 +1,27 @@
-import { State } from "state";
+import { State, getProjectComponent } from "state";
 import { Node } from "@ustutt/grapheditor-webcomponent/lib/node";
 import { Edge, edgeId } from "@ustutt/grapheditor-webcomponent/lib/edge";
+
+
+export const selectNode = (state: State, node?: Node) => {
+    const newState = Object.assign({}, state);
+
+    if (node == null) {
+        newState.selected = {
+            selectedNode: null,
+            selectedComponent: null,
+        };
+        return newState;
+    }
+
+
+    newState.selected = {
+        selectedNode: state.active.activeDiagram.nodes[node.id],
+        selectedComponent: getProjectComponent(state.active.activeProjectComponents, node.elementId),
+    };
+
+    return newState;
+}
 
 export const addNode = (state: State, node: Node) => {
     const newState = Object.assign({}, state);

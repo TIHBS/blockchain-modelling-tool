@@ -3,7 +3,7 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import { connectTo, Store } from 'aurelia-store';
 import { pluck } from 'rxjs/operators';
 
-import { State, ActiveDiagramState } from '../../state';
+import { State, ActiveDiagramState, ActiveProjectState, getProjectComponent } from '../../state';
 
 import GraphEditor from '@ustutt/grapheditor-webcomponent/lib/grapheditor'
 import { Node } from '@ustutt/grapheditor-webcomponent/lib/node';
@@ -11,10 +11,10 @@ import { Edge } from '@ustutt/grapheditor-webcomponent/lib/edge';
 import { NODE_SELECTION_CHANNEL, NodeSelectionMessage } from 'resources/messages/messages';
 
 @autoinject()
-@connectTo<State>((store) => store.state.pipe(pluck('active', 'activeDiagram')))
+@connectTo<State>((store) => store.state.pipe(pluck('active')))
 export class Editor {
 
-    public state: ActiveDiagramState;
+    public state: ActiveProjectState;
 
     grapheditor: GraphEditor;
 
@@ -44,10 +44,13 @@ export class Editor {
             const selection: Set<string> = event.detail.selection;
             if (selection.size === 1) {
                 const selected = selection.keys().next().value;
-                this.eventAggregator.publish(new NodeSelectionMessage(selected));
+                //this.eventAggregator.publish(new NodeSelectionMessage(selected));
+                const node = this.grapheditor.getNode(selected);
+                this.store.dispatch('selectNode', node);
                 return;
             }
-            this.eventAggregator.publish(new NodeSelectionMessage(null));
+            this.store.dispatch('selectNode', null);
+            //this.eventAggregator.publish(new NodeSelectionMessage(null));
         });
     }
 
@@ -55,34 +58,45 @@ export class Editor {
         this.store.dispatch('changeActiveProject', null, null);
     }
 
-    stateChanged(newState: ActiveDiagramState, oldState: ActiveDiagramState) {
+    stateChanged(newState: ActiveProjectState, oldState: ActiveProjectState) {
         if (this.grapheditor == null || oldState == null) {
             return;
         }
 
+        const oldGraph: ActiveDiagramState = oldState.activeDiagram;
+        const newGraph: ActiveDiagramState = newState.activeDiagram;
+
         let hasChanged = false;
 
-        Object.keys(oldState.nodes).forEach(id => {
-            if (newState.nodes[id] == null) {
-                this.grapheditor.removeNode(oldState.nodes[id]);
+        Object.keys(oldGraph.nodes).forEach(id => {
+            if (newGraph.nodes[id] == null) {
+                this.grapheditor.removeNode(oldGraph.nodes[id]);
                 hasChanged = true;
             }
         });
-        Object.keys(newState.nodes).forEach(id => {
-            if (oldState.nodes[id] == null) {
-                this.grapheditor.addNode(newState.nodes[id]);
+        Object.keys(newGraph.nodes).forEach(id => {
+            if (oldGraph.nodes[id] == null) {
+
+                const node: Node = Object.assign({}, newGraph.nodes[id]);
+
+                node.element = getProjectComponent(newState.activeProjectComponents, node.elementId);
+                if (node.element == null) {
+                    console.error('Could not create node!', node);
+                }
+
+                this.grapheditor.addNode(node);
                 hasChanged = true;
             }
         });
-        Object.keys(oldState.edges).forEach(id => {
-            if (newState.edges[id] == null) {
-                this.grapheditor.removeEdge(oldState.edges[id]);
+        Object.keys(oldGraph.edges).forEach(id => {
+            if (newGraph.edges[id] == null) {
+                this.grapheditor.removeEdge(oldGraph.edges[id]);
                 hasChanged = true;
             }
         });
-        Object.keys(newState.edges).forEach(id => {
-            if (oldState.edges[id] == null) {
-                this.grapheditor.addEdge(newState.edges[id]);
+        Object.keys(newGraph.edges).forEach(id => {
+            if (oldGraph.edges[id] == null) {
+                this.grapheditor.addEdge(newGraph.edges[id]);
                 hasChanged = true;
             }
         });

@@ -9,93 +9,118 @@ import uuidv4 from 'uuid/v4';
 import { State, ActiveProjectState } from '../../state';
 import { Node } from '@ustutt/grapheditor-webcomponent/lib/node';
 import { NodeSelectionMessage } from 'resources/messages/messages';
+import { ActorComponent, SmartContractComponent, TransactionComponent, RepositoryComponent } from 'project';
 
 @autoinject()
-@connectTo<State>((store) => store.state.pipe(pluck('active')))
+@connectTo<State>({
+    selector: {
+        activeProject: (store) => store.state.pipe(pluck('active')),
+        selectedNode: (store) => store.state.pipe(pluck('selected', 'selectedNode')),
+    }
+})
 export class EditorSidebar {
 
-    state: ActiveProjectState;
+    activeProject: ActiveProjectState;
 
-    selectedNode: string;
+    selectedNode: Node;
 
     eventSubscription: Subscription;
 
     constructor(private store: Store<State>, private eventAggregator: EventAggregator) {}
 
-    stateChanged(newState: ActiveProjectState, oldState: ActiveProjectState) {
+    activeProjectChanged(newState: ActiveProjectState, oldState: ActiveProjectState) {
         console.log('The state has changed', newState);
     }
 
     bind() {
-        this.eventSubscription = this.eventAggregator.subscribe(NodeSelectionMessage, (message: NodeSelectionMessage) => {
-            this.selectedNode = message.selectedNode;
-            console.log(message)
-        });
+        //this.eventSubscription = this.eventAggregator.subscribe(NodeSelectionMessage, (message: NodeSelectionMessage) => {
+        //    this.selectedNode = message.selectedNode;
+        //    console.log(message)
+        //});
     }
 
     unbind() {
-        this.eventSubscription?.dispose();
+        //this.eventSubscription?.dispose();
     }
 
     addActor() {
-        const zoom = this.state.activeEditor.currentZoomTransform;
+        const zoom = this.activeProject.activeEditor.currentZoomTransform;
+        const actorComponent: ActorComponent = {
+            type: 'actor',
+            id: uuidv4(),
+            title: 'Actor',
+        };
         const node: Node = {
             id: uuidv4(),
             x: zoom.invertX(0),
             y: zoom.invertY(0),
             type: 'actor',
-            element: {
-                id: uuidv4(),
-                title: 'Actor',
-            }
+            elementId: actorComponent.id,
         };
-        console.log(this.state.activeEditor)
-        this.store.dispatch('addNode', node);
+        this.store
+            .pipe('addProjectComponent', actorComponent)
+            .pipe('addNode', node)
+            .dispatch();
     }
 
     addSmartContract() {
-        const zoom = this.state.activeEditor.currentZoomTransform;
+        const zoom = this.activeProject.activeEditor.currentZoomTransform;
+        const smartContractComponent: SmartContractComponent = {
+            type: 'smart-contract',
+            id: uuidv4(),
+            title: 'Smart Contract',
+        };
         const node: Node = {
             id: uuidv4(),
             x: zoom.invertX(0),
             y: zoom.invertY(0),
             type: 'smart-contract',
-            element: {
-                id: uuidv4(),
-                title: 'Smart Contract',
-            }
+            elementId: smartContractComponent.id,
         };
-        this.store.dispatch('addNode', node);
+        this.store
+            .pipe('addProjectComponent', smartContractComponent)
+            .pipe('addNode', node)
+            .dispatch();
     }
 
     addTransaction() {
-        const zoom = this.state.activeEditor.currentZoomTransform;
+        const zoom = this.activeProject.activeEditor.currentZoomTransform;
+        const transactionComponent: TransactionComponent = {
+            type: 'transaction',
+            id: uuidv4(),
+            title: 'Transaction',
+        };
         const node: Node = {
             id: uuidv4(),
             x: zoom.invertX(0),
             y: zoom.invertY(0),
             type: 'transaction',
-            element: {
-                id: uuidv4(),
-                title: 'Transaction',
-            }
+            elementId: transactionComponent.id,
         };
-        this.store.dispatch('addNode', node);
+        this.store
+            .pipe('addProjectComponent', transactionComponent)
+            .pipe('addNode', node)
+            .dispatch();
     }
 
     addDatabase() {
-        const zoom = this.state.activeEditor.currentZoomTransform;
+        const zoom = this.activeProject.activeEditor.currentZoomTransform;
+        const repositoryComponent: RepositoryComponent = {
+            type: 'repository',
+            id: uuidv4(),
+            title: 'Database',
+        };
         const node: Node = {
             id: uuidv4(),
             x: zoom.invertX(0),
             y: zoom.invertY(0),
             type: 'database',
-            element: {
-                id: uuidv4(),
-                title: 'Database',
-            }
+            elementId: repositoryComponent.id,
         };
-        this.store.dispatch('addNode', node);
+        this.store
+            .pipe('addProjectComponent', repositoryComponent)
+            .pipe('addNode', node)
+            .dispatch();
     }
 
 }
