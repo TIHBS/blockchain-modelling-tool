@@ -8,7 +8,6 @@ import uuidv4 from 'uuid/v4';
 
 import { State, ActiveProjectState } from '../../state';
 import { Node } from '@ustutt/grapheditor-webcomponent/lib/node';
-import { NodeSelectionMessage } from 'resources/messages/messages';
 import { ActorComponent, SmartContractComponent, TransactionComponent, RepositoryComponent } from 'project';
 
 @autoinject()
@@ -27,10 +26,6 @@ export class EditorSidebar {
     eventSubscription: Subscription;
 
     constructor(private store: Store<State>, private eventAggregator: EventAggregator) {}
-
-    activeProjectChanged(newState: ActiveProjectState, oldState: ActiveProjectState) {
-        console.log('The state has changed', newState);
-    }
 
     bind() {
         //this.eventSubscription = this.eventAggregator.subscribe(NodeSelectionMessage, (message: NodeSelectionMessage) => {

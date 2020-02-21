@@ -4,8 +4,8 @@ import { autoinject } from 'aurelia-dependency-injection';
 import { Store } from 'aurelia-store';
 import { State } from './state';
 
-import { changeActiveProject, addProjectComponent } from './resources/state-actions/active-project-actions';
-import { addNode, removeNode, addEdge, removeEdge, selectNode } from './resources/state-actions/active-diagram-actions';
+import { changeActiveProject, addProjectComponent, updateProjectComponent } from './resources/state-actions/active-project-actions';
+import { addNode, removeNode, addEdge, removeEdge, selectNode, updateNode } from './resources/state-actions/active-diagram-actions';
 
 @autoinject()
 export class App {
@@ -13,8 +13,10 @@ export class App {
     constructor(private store: Store<State>) {
         this.store.registerAction('changeActiveProject', changeActiveProject);
         this.store.registerAction('addProjectComponent', addProjectComponent);
+        this.store.registerAction('updateProjectComponent', updateProjectComponent);
 
         this.store.registerAction('addNode', addNode);
+        this.store.registerAction('updateNode', updateNode);
         this.store.registerAction('removeNode', removeNode);
         this.store.registerAction('addEdge', addEdge);
         this.store.registerAction('removeEdge', removeEdge);

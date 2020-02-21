@@ -35,6 +35,25 @@ export const addNode = (state: State, node: Node) => {
     return newState;
 }
 
+export const updateNode = (state: State, node: Node) => {
+    const newState = Object.assign({}, state);
+    newState.active = Object.assign({}, state.active);
+    const diagram = Object.assign({}, state.active.activeDiagram);
+    newState.active.activeDiagram = diagram;
+    diagram.nodes = Object.assign({}, diagram.nodes);
+
+    const updatedNode = Object.assign({}, node);
+
+    diagram.nodes[node.id] = updatedNode;
+
+    if (newState.selected?.selectedNode?.id === updatedNode.id) {
+        newState.selected = Object.assign({}, state.selected);
+        newState.selected.selectedNode = updatedNode;
+    }
+
+    return newState;
+}
+
 export const removeNode = (state: State, node: Node) => {
     const newState = Object.assign({}, state);
     newState.active = Object.assign({}, state.active);
@@ -43,6 +62,13 @@ export const removeNode = (state: State, node: Node) => {
     diagram.nodes = Object.assign({}, diagram.nodes);
 
     delete diagram.nodes[node.id];
+
+    if (newState.selected?.selectedNode?.id === node.id) {
+        newState.selected = {
+            selectedNode: null,
+            selectedComponent: null,
+        };
+    }
 
     return newState;
 }
