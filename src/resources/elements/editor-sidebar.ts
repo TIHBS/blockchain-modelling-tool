@@ -4,7 +4,7 @@ import { connectTo, Store } from 'aurelia-store';
 
 import { pluck } from 'rxjs/operators';
 
-import uuidv4 from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 
 import { State, ActiveProjectState } from '../../state';
 import { Node } from '@ustutt/grapheditor-webcomponent/lib/node';
@@ -39,7 +39,7 @@ export class EditorSidebar {
     }
 
     addActor() {
-        const zoom = this.activeProject.activeEditor.currentZoomTransform;
+        const currentView = this.activeProject.activeEditor.currentViewWindow;
         const actorComponent: ActorComponent = {
             type: 'actor',
             id: uuidv4(),
@@ -47,19 +47,20 @@ export class EditorSidebar {
         };
         const node: Node = {
             id: uuidv4(),
-            x: zoom.invertX(0),
-            y: zoom.invertY(0),
+            x: currentView.x + currentView.width/2,
+            y: currentView.y + currentView.height/2,
             type: 'actor',
             elementId: actorComponent.id,
         };
         this.store
             .pipe('addProjectComponent', actorComponent)
             .pipe('addNode', node)
+            .pipe('selectNode', node)
             .dispatch();
     }
 
     addSmartContract() {
-        const zoom = this.activeProject.activeEditor.currentZoomTransform;
+        const currentView = this.activeProject.activeEditor.currentViewWindow;
         const smartContractComponent: SmartContractComponent = {
             type: 'smart-contract',
             id: uuidv4(),
@@ -67,19 +68,20 @@ export class EditorSidebar {
         };
         const node: Node = {
             id: uuidv4(),
-            x: zoom.invertX(0),
-            y: zoom.invertY(0),
+            x: currentView.x + currentView.width/2,
+            y: currentView.y + currentView.height/2,
             type: 'smart-contract',
             elementId: smartContractComponent.id,
         };
         this.store
             .pipe('addProjectComponent', smartContractComponent)
             .pipe('addNode', node)
+            .pipe('selectNode', node)
             .dispatch();
     }
 
     addTransaction() {
-        const zoom = this.activeProject.activeEditor.currentZoomTransform;
+        const currentView = this.activeProject.activeEditor.currentViewWindow;
         const transactionComponent: TransactionComponent = {
             type: 'transaction',
             id: uuidv4(),
@@ -87,19 +89,20 @@ export class EditorSidebar {
         };
         const node: Node = {
             id: uuidv4(),
-            x: zoom.invertX(0),
-            y: zoom.invertY(0),
+            x: currentView.x + currentView.width/2,
+            y: currentView.y + currentView.height/2,
             type: 'transaction',
             elementId: transactionComponent.id,
         };
         this.store
             .pipe('addProjectComponent', transactionComponent)
             .pipe('addNode', node)
+            .pipe('selectNode', node)
             .dispatch();
     }
 
     addDatabase() {
-        const zoom = this.activeProject.activeEditor.currentZoomTransform;
+        const currentView = this.activeProject.activeEditor.currentViewWindow;
         const repositoryComponent: RepositoryComponent = {
             type: 'repository',
             id: uuidv4(),
@@ -107,14 +110,15 @@ export class EditorSidebar {
         };
         const node: Node = {
             id: uuidv4(),
-            x: zoom.invertX(0),
-            y: zoom.invertY(0),
+            x: currentView.x + currentView.width/2,
+            y: currentView.y + currentView.height/2,
             type: 'database',
             elementId: repositoryComponent.id,
         };
         this.store
             .pipe('addProjectComponent', repositoryComponent)
             .pipe('addNode', node)
+            .pipe('selectNode', node)
             .dispatch();
     }
 

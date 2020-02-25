@@ -3,7 +3,7 @@ import { EventAggregator, Subscription } from 'aurelia-event-aggregator';
 import { connectTo, Store } from 'aurelia-store';
 import { pluck } from 'rxjs/operators';
 
-import { State, ActiveDiagramState, ActiveProjectState, getProjectComponent } from '../../state';
+import { State, ActiveDiagramState, ActiveProjectState, getProjectComponent, SelectedState } from '../../state';
 
 import GraphEditor from '@ustutt/grapheditor-webcomponent/lib/grapheditor'
 import { Node } from '@ustutt/grapheditor-webcomponent/lib/node';
@@ -11,13 +11,19 @@ import { Edge } from '@ustutt/grapheditor-webcomponent/lib/edge';
 import { NodeChangedMessage, ProjectComponentChangedMessage, NodePositionChangedMessage } from 'resources/messages/messages';
 
 @autoinject()
-@connectTo<State>((store) => store.state.pipe(pluck('active')))
+@connectTo<State>({
+    selector: {
+        activeProject: (store) => store.state.pipe(pluck('active')),
+        selectedNode: (store) => store.state.pipe(pluck('selected', 'selectedNode')),
+    }
+})
 export class Editor {
 
     private nodeChangedSubscription: Subscription;
     private componentChangedSubscription: Subscription;
 
-    public state: ActiveProjectState;
+    public activeProject: ActiveProjectState;
+    public selectedNode: Node;
 
     grapheditor: GraphEditor;
 
@@ -47,18 +53,13 @@ export class Editor {
                 return;
             }
             event.preventDefault();
-            this.grapheditor.changeSelected(new Set([node.id]));
-        });
-
-        this.grapheditor.addEventListener('selection', (event: CustomEvent) => {
-            const selection: Set<string> = event.detail.selection;
-            if (selection.size === 1) {
-                const selected = selection.keys().next().value;
-                const node = this.grapheditor.getNode(selected);
+            console.log(event.detail)
+            if (this.selectedNode.id === node.id) {
+                // unselect on selecting again
+                this.store.dispatch('selectNode', null);
+            } else {
                 this.store.dispatch('selectNode', node);
-                return;
             }
-            this.store.dispatch('selectNode', null);
         });
 
         this.grapheditor.addEventListener('nodedragend', (event: CustomEvent) => {
@@ -66,7 +67,7 @@ export class Editor {
             if (event.detail.eventSource !== 'USER_INTERACTION') {
                 return;
             }
-            const oldNode = this.state.activeDiagram.nodes[node.id];
+            const oldNode = this.activeProject.activeDiagram.nodes[node.id];
             const newNode = {
                 ...oldNode,
                 x: node.x,
@@ -83,7 +84,7 @@ export class Editor {
         this.componentChangedSubscription?.dispose();
     }
 
-    stateChanged(newState: ActiveProjectState, oldState: ActiveProjectState) {
+    activeProjectChanged(newState: ActiveProjectState, oldState: ActiveProjectState) {
         if (this.grapheditor == null || oldState == null) {
             return;
         }
@@ -136,7 +137,17 @@ export class Editor {
             this.grapheditor.completeRender();
             this.grapheditor.zoomToBoundingBox();
         }
+    }
 
+    selectedNodeChanged(newSelected: Node, oldSelected: Node) {
+        if (newSelected?.id === oldSelected?.id) {
+            return;
+        }
+        if (newSelected == null) {
+            this.grapheditor.changeSelected(new Set());
+        } else {
+            this.grapheditor.changeSelected(new Set([newSelected.id as string]));
+        }
     }
 
     nodeChanged(msg: NodeChangedMessage) {
