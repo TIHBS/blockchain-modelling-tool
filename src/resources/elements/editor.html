@@ -61,5 +61,57 @@
             </svg>
         </network-graph>
 
+
+        <div class="absolute bg-white ba b--black top-1 left-1" style="width: 10rem; height: 7rem;">
+            <network-graph ref="minimap" mode="display" zoom="both" classes="test">
+                <svg slot="graph">
+                    <style>
+                        .node {fill: white;}
+                        .link-handle {display: none;}
+                        rect.minimap {
+                            fill: orange;
+                            opacity: 0.5;
+                        }
+                    </style>
+                    <defs class="templates">
+                        <g id="default" data-template-type="node">
+                            <rect width="100" height="60" x="-50" y="-30" data-link-handles="edges"></rect>
+                        </g>
+                        <g id="actor" data-template-type="node">
+                            <g transform="translate(-40,-50)">
+                                <circle fill="white" stroke="black" cx="40" cy="25" r="20"/>
+                                <path fill="white" stroke="black" d="M 0,90 l 5,-33 l 15,-12 l 5,-2 l 15,10 l 15,-10 l 5,2 l 15,12, l 5,33 z" />
+                            </g>
+                        </g>
+                        <g id="smart-contract" data-template-type="node">
+                            <rect class="background" x="-35" y="-45" width="70" height="90" data-link-handles="edges"></rect>
+                            <g transform="translate(-35,-45)">
+                                <polygon fill="white" stroke="black" stroke-linejoin="round" points="0,0 60,0 70,10 70,90 0,90"/>
+                                <polygon fill="lightgrey" stroke="black" stroke-linejoin="round" points="60,0 60,10 70,10" />
+                            </g>
+                        </g>
+                        <g id="transaction" data-template-type="node">
+                            <rect fill="white" stroke="black" x="-35" y="-45" width="70" height="90" data-link-handles="edges"></rect>
+                        </g>
+                        <g id="database" data-template-type="node">
+                            <polygon class="background" points="0,-40 25,0 0,40 -25,0" data-link-handles="corners"></polygon>
+                            <path fill="white" stroke="black" d="M-25,-30 a25,10 0 0,1 50,0 l 0,60 a25,10 0 0,1 -50,0 z" />
+                            <ellipse fill="white" stroke="black" cx="0" cy="-30" rx="25" ry="10" />
+                        </g>
+                        <g id="arrow" data-template-type="marker" data-line-attachement-point="-9 0">
+                            <path d="M -9 -4 L 0 0 L -9 4 z" />
+                        </g>
+                    </defs>
+                    <g class="zoom-group">
+                        <g class="edges"></g>
+                        <g class="nodes"></g>
+                        <rect class="minimap" x.bind="currentVisibleArea.x" y.bind="currentVisibleArea.y" width.bind="currentVisibleArea.width" height.bind="currentVisibleArea.height">
+
+                        </rect>
+                    </g>
+                </svg>
+            </network-graph>
+        </div>
+
     </div>
 </template>

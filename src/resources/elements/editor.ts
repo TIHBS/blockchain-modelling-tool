@@ -9,6 +9,7 @@ import GraphEditor from '@ustutt/grapheditor-webcomponent/lib/grapheditor'
 import { Node } from '@ustutt/grapheditor-webcomponent/lib/node';
 import { Edge } from '@ustutt/grapheditor-webcomponent/lib/edge';
 import { NodeChangedMessage, ProjectComponentChangedMessage, NodePositionChangedMessage } from 'resources/messages/messages';
+import { Rect } from '@ustutt/grapheditor-webcomponent/lib/util';
 
 @autoinject()
 @connectTo<State>({
@@ -26,6 +27,9 @@ export class Editor {
     public selectedNode: Node;
 
     grapheditor: GraphEditor;
+    minimap: GraphEditor;
+
+    currentVisibleArea: Rect = {x: 0, y: 0, width: 1, height: 1};
 
     private componentToNode: Map<string, Set<string>> = new Map<string, Set<string>>();
 
@@ -53,8 +57,7 @@ export class Editor {
                 return;
             }
             event.preventDefault();
-            console.log(event.detail)
-            if (this.selectedNode.id === node.id) {
+            if (this.selectedNode?.id === node.id) {
                 // unselect on selecting again
                 this.store.dispatch('selectNode', null);
             } else {
@@ -75,6 +78,30 @@ export class Editor {
             };
             this.store.pipe('updateNode', newNode).dispatch();
             this.eventAggregator.publish(new NodePositionChangedMessage(newNode, oldNode, 'graph'));
+        });
+
+        // bind minimap
+        this.grapheditor.addEventListener('nodeadd', (event: CustomEvent) => {
+            this.minimap.addNode(event.detail.node);
+        });
+        this.grapheditor.addEventListener('noderemove', (event: CustomEvent) => {
+            this.minimap.removeNode(event.detail.node);
+        });
+        this.grapheditor.addEventListener('render', (event: CustomEvent) => {
+            if (event.detail.rendered === 'complete') {
+                this.minimap.completeRender();
+                this.minimap.zoomToBoundingBox();
+            } else if (event.detail.rendered === 'text') {
+                // ignore for minimap
+            } else if (event.detail.rendered === 'classes') {
+                this.minimap.updateNodeClasses();
+            } else if (event.detail.rendered === 'positions') {
+                this.minimap.completeRender();
+                this.minimap.zoomToBoundingBox();
+            }
+        });
+        this.grapheditor.addEventListener('zoomchange', (event: CustomEvent) => {
+            this.currentVisibleArea = event.detail.currentViewWindow;
         });
     }
 
