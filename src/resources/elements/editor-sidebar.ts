@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { State, ActiveProjectState } from '../../state';
 import { Node } from '@ustutt/grapheditor-webcomponent/lib/node';
-import { ActorComponent, SmartContractComponent, TransactionComponent, RepositoryComponent } from 'project';
+import { ActorComponent, SmartContractComponent, TransactionComponent, RepositoryComponent, NodeComponent, BlockComponent, WalletComponent, BlockchainComponent, GroupComponent } from 'project';
 
 @autoinject()
 @connectTo<State>({
@@ -122,4 +122,108 @@ export class EditorSidebar {
             .dispatch();
     }
 
+    addNode() {
+        const currentView = this.activeProject.activeEditor.currentViewWindow;
+        const nodeComponent: NodeComponent = {
+            type: 'node',
+            id: uuidv4(),
+            title: 'Node',
+        };
+        const node: Node = {
+            id: uuidv4(),
+            x: currentView.x + currentView.width/2,
+            y: currentView.y + currentView.height/2,
+            type: 'node',
+            elementId: nodeComponent.id,
+        };
+        this.store
+            .pipe('addProjectComponent', nodeComponent)
+            .pipe('addNode', node)
+            .pipe('selectNode', node)
+            .dispatch();
+    }
+
+    addBlock() {
+        const currentView = this.activeProject.activeEditor.currentViewWindow;
+        const blockComponent: BlockComponent = {
+            type: 'block',
+            id: uuidv4(),
+            title: 'Block',
+        };
+        const node: Node = {
+            id: uuidv4(),
+            x: currentView.x + currentView.width/2,
+            y: currentView.y + currentView.height/2,
+            type: 'block',
+            elementId: blockComponent.id,
+        };
+        this.store
+            .pipe('addProjectComponent', blockComponent)
+            .pipe('addNode', node)
+            .pipe('selectNode', node)
+            .dispatch();
+    }
+
+    addWallet() {
+        const currentView = this.activeProject.activeEditor.currentViewWindow;
+        const walletComponent: WalletComponent = {
+            type: 'wallet',
+            id: uuidv4(),
+            title: 'Wallet',
+        };
+        const node: Node = {
+            id: uuidv4(),
+            x: currentView.x + currentView.width/2,
+            y: currentView.y + currentView.height/2,
+            type: 'wallet',
+            elementId: walletComponent.id,
+        };
+        this.store
+            .pipe('addProjectComponent', walletComponent)
+            .pipe('addNode', node)
+            .pipe('selectNode', node)
+            .dispatch();
+    }
+
+    addBlockchain() {
+        const currentView = this.activeProject.activeEditor.currentViewWindow;
+        const blockchainComponent: BlockchainComponent = {
+            type: 'blockchain',
+            id: uuidv4(),
+            title: 'Blockchain',
+        };
+        const node: Node = {
+            id: uuidv4(),
+            x: currentView.x + currentView.width/2,
+            y: currentView.y + currentView.height/2,
+            type: 'blockchain',
+            elementId: blockchainComponent.id,
+        };
+        this.store
+            .pipe('addProjectComponent', blockchainComponent)
+            .pipe('addNode', node)
+            .pipe('selectNode', node)
+            .dispatch();
+    }
+
+    addGroup() {
+        const currentView = this.activeProject.activeEditor.currentViewWindow;
+        const groupComponent: GroupComponent = {
+            type: 'group',
+            id: uuidv4(),
+            title: 'Group',
+        };
+        const node: Node = {
+            id: uuidv4(),
+            x: currentView.x + currentView.width/2,
+            y: currentView.y + currentView.height/2,
+            type: 'group',
+            elementId: groupComponent.id,
+        };
+        this.store
+            .pipe('addProjectComponent', groupComponent)
+            .pipe('addNode', node)
+            .pipe('selectNode', node)
+            .dispatch();
+    }
 }

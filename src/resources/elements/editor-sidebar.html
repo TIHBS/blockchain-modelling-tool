@@ -1,33 +1,60 @@
 <template>
-    <require from="../svg-elements/actor"></require>
-    <require from="../svg-elements/smart-contract"></require>
-    <require from="../svg-elements/transaction"></require>
-    <require from="../svg-elements/database"></require>
+    <require from="../svg-elements/actor.html"></require>
+    <require from="../svg-elements/smart-contract.html"></require>
+    <require from="../svg-elements/transaction.html"></require>
+    <require from="../svg-elements/database.html"></require>
+    <require from="../svg-elements/node.html"></require>
+    <require from="../svg-elements/block.html"></require>
+    <require from="../svg-elements/wallet.html"></require>
+    <require from="../svg-elements/blockchain.html"></require>
+    <require from="../svg-elements/group.html"></require>
 
     <require from="./node-properties"></require>
 
     <h2 class="f4 w-100 pa2 ma0 bg-black-20 shadow-2">${activeProject.activeProject}</h2>
 
-    <h3 class="f5 w-100 pa2 ma0">Elements</h3>
+    <h3 class="f5 w-100 pa2 ma0 bb b--black-10"">Elements</h3>
 
-    <div>
-        <svg>
-            <g transform="scale(0.5)translate(5,5)" click.delegate="addActor()">
-                <actor translate="0,0"></actor>
-            </g>
-            <g transform="scale(0.5)translate(100,5)" click.delegate="addSmartContract()">
-                <smart-contract translate="0,0"></smart-contract>
-            </g>
-            <g transform="scale(0.5)translate(180,5)" click.delegate="addTransaction()">
-                <transaction translate="0,0"></transaction>
-            </g>
-            <g transform="scale(0.57)translate(240,5)" click.delegate="addDatabase()">
-                <database translate="0,0"></database>
-            </g>
-        </svg>
+    <div class="flex flex-wrap">
+        <div class="pa2 pointer grow w-min" click.delegate="addActor()">
+            <actor></actor>
+            <p class="ma0 tc">Actor</p>
+        </div>
+        <div class="pa2 pointer grow w-min" click.delegate="addSmartContract()">
+            <smart-contract></smart-contract>
+            <p class="ma0 tc">Smart Contract</p>
+        </div>
+        <div class="pa2 pointer grow w-min" click.delegate="addTransaction()">
+            <transaction></transaction>
+            <p class="ma0 tc">Transaction</p>
+        </div>
+        <div class="pa2 pointer grow w-min" click.delegate="addDatabase()">
+            <database></database>
+            <p class="ma0 tc">Database</p>
+        </div>
+        <div class="pa2 pointer grow w-min" click.delegate="addNode()">
+            <node></node>
+            <p class="ma0 tc">Node</p>
+        </div>
+        <div class="pa2 pointer grow w-min" click.delegate="addBlock()">
+            <block></block>
+            <p class="ma0 tc">Block</p>
+        </div>
+        <div class="pa2 pointer grow w-min" click.delegate="addWallet()">
+            <wallet></wallet>
+            <p class="ma0 tc">Wallet</p>
+        </div>
+        <div class="pa2 pointer grow w-min" click.delegate="addBlockchain()">
+            <blockchain></blockchain>
+            <p class="ma0 tc">Blockchain</p>
+        </div>
+        <div class="pa2 pointer grow w-min" click.delegate="addGroup()">
+            <group></group>
+            <p class="ma0 tc">Group</p>
+        </div>
     </div>
 
-    <h3 class="f5 w-100 pa2 ma0">Properties</h3>
+    <h3 class="f5 w-100 pa2 ma0 bb b--black-10">Properties</h3>
 
     <p class="ph2" show.bind="!selectedNode">Select a Node…</p>
 

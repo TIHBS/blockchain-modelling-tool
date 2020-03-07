@@ -1,6 +1,6 @@
 import { State, ProjectComponents } from "state";
 import GraphEditor from "@ustutt/grapheditor-webcomponent/lib/grapheditor";
-import { ProjectComponent, ActorComponent, SmartContractComponent, TransactionComponent, RepositoryComponent, BlockchainComponent } from "project";
+import { ProjectComponent, ActorComponent, SmartContractComponent, TransactionComponent, RepositoryComponent, BlockchainComponent, NodeComponent, BlockComponent, WalletComponent, GroupComponent } from "project";
 
 export const changeActiveProject = (state: State, projectName: string, editor: GraphEditor) => {
     const newState = Object.assign({}, state);
@@ -11,7 +11,11 @@ export const changeActiveProject = (state: State, projectName: string, editor: G
         smartContract: {},
         transaction: {},
         repository: {},
+        node: {},
+        block: {},
+        wallet: {},
         blockchain: {},
+        group: {},
     };
 
     if (projectName !== 'Playground') {
@@ -58,9 +62,21 @@ export const addProjectComponent = (state: State, component: ProjectComponent<st
     } else if (component.type === 'repository') {
         activeComponents.repository = Object.assign({}, activeComponents.repository);
         activeComponents.repository[component.id] = component as RepositoryComponent;
+    } else if (component.type === 'node') {
+        activeComponents.node = Object.assign({}, activeComponents.node);
+        activeComponents.node[component.id] = component as NodeComponent;
+    } else if (component.type === 'block') {
+        activeComponents.block = Object.assign({}, activeComponents.block);
+        activeComponents.block[component.id] = component as BlockComponent;
+    } else if (component.type === 'wallet') {
+        activeComponents.wallet = Object.assign({}, activeComponents.wallet);
+        activeComponents.wallet[component.id] = component as WalletComponent;
     } else if (component.type === 'blockchain') {
         activeComponents.blockchain = Object.assign({}, activeComponents.blockchain);
         activeComponents.blockchain[component.id] = component as BlockchainComponent;
+    } else if (component.type === 'group') {
+        activeComponents.group = Object.assign({}, activeComponents.group);
+        activeComponents.group[component.id] = component as GroupComponent;
     }
 
     return newState;

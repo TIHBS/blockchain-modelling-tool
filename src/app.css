@@ -27,3 +27,7 @@ nav {
 main {
     grid-area: content;
 }
+
+.w-min {
+    width: min-content;
+}

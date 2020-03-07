@@ -1,7 +1,4 @@
 <template>
-    <require from="../svg-elements/actor"></require>
-    <require from="../svg-elements/smart-contract"></require>
-    <require from="../svg-elements/transaction"></require>
 
     <div class="relative w-100 h-100">
         <network-graph class="absolute w-100 h-100" ref="grapheditor" mode="layout" zoom="both" classes="test">
@@ -14,45 +11,73 @@
                     .edge-group .link-handle {display: initial}
                     .link-handle:hover {opacity: 0.7;}
                     .link-handle:hover>* {transform: scale(1.5);}
-                    .text {fill: black; font-size: 6pt; text-overflow: ellipsis; word-break: break-word}
+                    .text {fill: black; font-size: 6pt; text-overflow: ellipsis; word-break: break-all}
                     .text.title {font-size: initial; text-overflow: clip; word-break: break-word;}
                     .centered {text-anchor: middle;}
                     .hovered .link-handle {display: initial;}
-                    .background {opacity: 0; fill: black;}
+                    .background {opacity: 0; fill: black; transition:opacity 0.25s ease-out;}
                     .background:hover {opacity: 0.1;}
                 </style>
                 <defs class="templates">
-                    <g id="default" data-template-type="node">
-                        <rect width="100" height="60" x="-50" y="-30" data-link-handles="edges"></rect>
-                        <text class="text title" data-content="title" data-click="title" width="90" x="-45" y="-16"></text>
-                        <text class="text description" data-content="description" data-click="description" width="90" height="30" x="-45" y="-5"></text>
-                        <text class="text version" data-content="version" data-click="version" width="40" x="-45" y="25"></text>
+                    <g id="block-icon">
+                        <path d="M 0,60 h 50 l 10,-10 v -50 h -50 l -10,10 z M 0,10 h 50 l 10,-10 M 50,10 v 50"></path>
+                    </g>
+                    <g id="chain-link-icon">
+                        <path fill="black" stroke="none" d="M 18,25 h 14 c 15,0 15,20 0,20 h -14 c -15,0 -15,-20 0,-20 z M 18,40 h 14 c 7,0 7,-10 0,-10 h -14 c -7,0 -7,10 0,10 z"></path>
+                    </g>
+                    <g id="blockchain-icon">
+                        <use href="#block-icon" fill="white" stroke="black" transform="translate(-26.66,-10)scale(0.33)" stroke-width="3"></use>
+                        <use href="#block-icon" fill="white" stroke="black" transform="translate(-10,-10)scale(0.33)" stroke-width="3"></use>
+                        <use href="#block-icon" fill="white" stroke="black" transform="translate(6.66,-10)scale(0.33)" stroke-width="3"></use>
+
+                        <use href="#chain-link-icon" fill="black" stroke="none" transform="translate(-26.66,-10)scale(0.33)"></use>
+                        <use href="#chain-link-icon" fill="black" stroke="black" transform="translate(-10,-10)scale(0.33)"></use>
+                        <use href="#chain-link-icon" fill="black" stroke="black" transform="translate(6.66,-10)scale(0.33)"></use>
+
+                        <polyline stroke="black" stroke-width="2" stroke-linecap="round" points="-15,1.5 -5,1.5"></polyline>
+                        <polyline stroke="black" stroke-width="2" stroke-linecap="round" points="1.5,1.5 12,1.5"></polyline>
                     </g>
                     <g id="actor" data-template-type="node">
-                        <rect class="background" x="-40" y="-50" width="80" height="100" data-link-handles="edges"></rect>
-                        <g transform="translate(-40,-50)">
-                            <circle fill="white" stroke="black" cx="40" cy="25" r="20"/>
-                            <path fill="white" stroke="black" d="M 0,90 l 5,-33 l 15,-12 l 5,-2 l 15,10 l 15,-10 l 5,2 l 15,12, l 5,33 z" />
-                        </g>
-                        <text class="text centered" data-content="element.title" x="0" y="48" width="70"></text>
+                        <rect class="background" x="-32" y="-36" width="64" height="72" data-link-handles="edges"></rect>
+                        <circle fill="white" stroke="black" cx="00" cy="-17" r="17"></circle>
+                        <path fill="white" stroke="black" d="M -30,26 c 0,-30 7,-30 16,-30 l 14,12 l 14,-12 c 9,0 16,0 16,30 z"></path>
+                        <text class="text centered" data-content="element.title" x="0" y="34" width="60"></text>
                     </g>
                     <g id="smart-contract" data-template-type="node">
-                        <rect class="background" x="-35" y="-45" width="70" height="90" data-link-handles="edges"></rect>
-                        <g transform="translate(-35,-45)">
-                            <polygon fill="white" stroke="black" stroke-linejoin="round" points="0,0 60,0 70,10 70,90 0,90"/>
-                            <polygon fill="lightgrey" stroke="black" stroke-linejoin="round" points="60,0 60,10 70,10" />
-                            <text class="text" data-content="element.title" x="5" y="25" width="60" height="50"></text>
-                        </g>
+                        <rect class="background" x="-30" y="-30" width="50" height="60" data-link-handles="edges"></rect>
+                        <path fill="lightgrey" stroke="none" d="M 12,-30 v 8 h 8 z" />
+                        <path fill="white" stroke="black" fill-rule="nonzero" d="M -30,-30 h 42 l 8,8 v 52 h -50 z M 12,-30 v 8 h 8"></path>
+                        <text class="text" data-content="element.title" x="-28" y="-15" width="46" height="46"></text>
                     </g>
                     <g id="transaction" data-template-type="node">
-                        <rect fill="white" stroke="black" x="-35" y="-45" width="70" height="90" data-link-handles="edges"></rect>
-                        <text class="text" data-content="element.title" x="-30" y="-20" width="60" height="50"></text>
+                        <polygon fill="white" stroke="black" data-link-handles="edges" points="-13,-30 13,-30 30,-13 30,13 13,30 -13,30 -30,13 -30,-13" />
+                        <text class="text centered" data-content="element.title" x="0" y="-8" width="56" height="28"></text>
                     </g>
                     <g id="database" data-template-type="node">
-                        <polygon class="background" points="0,-40 25,0 0,40 -25,0" data-link-handles="corners"></polygon>
-                        <path fill="white" stroke="black" d="M-25,-30 a25,10 0 0,1 50,0 l 0,60 a25,10 0 0,1 -50,0 z" />
-                        <ellipse fill="white" stroke="black" cx="0" cy="-30" rx="25" ry="10" />
-                        <text class="text" data-content="element.title" x="0" y="5" width="40" height="20" text-anchor="middle"></text>
+                        <polygon class="background" points="0,-30 20,0 0,30 -20,0" data-link-handles="corners"></polygon>
+                        <path fill="white" stroke="black" d="M -20,-23 a 20,7 0 0,1 40,0 l 0,46 a 20,7 0 0,1 -40,0 z" />
+                        <ellipse fill="white" stroke="black" cx="0" cy="-23" rx="20" ry="7" />
+                        <text class="text centered" data-content="element.title" x="0" y="2" width="36" height="20"></text>
+                    </g>
+                    <g id="node" data-template-type="node">
+                        <circle fill="white" stroke="black" cx="0" cy="0" r="30" />
+                        <text class="text centered" data-content="element.title" x="0" y="2" width="56"></text>
+                    </g>
+                    <g id="block" data-template-type="node">
+                        <rect class="background" x="-30" y="-30" width="60" height="60" data-link-handles="edges"></rect>
+                        <use href="#block-icon" x="-30" y="-30" fill="white" stroke="black" />
+                        <text class="text" data-content="element.title" x="-28" y="-10" width="46" height="45"></text>
+                    </g>
+                    <g id="wallet" data-template-type="node">
+                        <rect class="background" x="-27" y="-30" width="54" height="60" data-link-handles="edges"></rect>
+                        <path fill="white" stroke="none" d="M 25,-4 h -10 c -8,0 -8,8 0,8 h 10"></path>
+                        <path fill="white" stroke="black" fill-rule="nonzero" d="M -25,-20 h 50 v 40 h -50 z M -25,-20 l 42,-8 v 8 M 25,-4 h -10 c -8,0 -8,8 0,8 h 10"></path>
+                        <text class="text centered" data-content="element.title" x="0" y="28" width="46"></text>
+                    </g>
+                    <g id="blockchain" data-template-type="node">
+                        <rect class="background" x="-27" y="-15" width="54" height="30" data-link-handles="edges"></rect>
+                        <use href="#blockchain-icon" y="-4"></use>
+                        <text class="text centered" data-content="element.title" x="0" y="13" width="46"></text>
                     </g>
                     <g id="arrow" data-template-type="marker" data-line-attachement-point="-9 0">
                         <path d="M -9 -4 L 0 0 L -9 4 z" />
@@ -74,32 +99,55 @@
                         }
                     </style>
                     <defs class="templates">
-                        <g id="default" data-template-type="node">
-                            <rect width="100" height="60" x="-50" y="-30" data-link-handles="edges"></rect>
+                        <g id="block-icon">
+                            <path d="M 0,60 h 50 l 10,-10 v -50 h -50 l -10,10 z M 0,10 h 50 l 10,-10 M 50,10 v 50"></path>
+                        </g>
+                        <g id="chain-link-icon">
+                            <path fill="black" stroke="none" d="M 18,25 h 14 c 15,0 15,20 0,20 h -14 c -15,0 -15,-20 0,-20 z M 18,40 h 14 c 7,0 7,-10 0,-10 h -14 c -7,0 -7,10 0,10 z"></path>
+                        </g>
+                        <g id="blockchain-icon">
+                            <use href="#block-icon" fill="white" stroke="black" transform="translate(-26.66,-10)scale(0.33)" stroke-width="3"></use>
+                            <use href="#block-icon" fill="white" stroke="black" transform="translate(-10,-10)scale(0.33)" stroke-width="3"></use>
+                            <use href="#block-icon" fill="white" stroke="black" transform="translate(6.66,-10)scale(0.33)" stroke-width="3"></use>
+
+                            <use href="#chain-link-icon" fill="black" stroke="none" transform="translate(-26.66,-10)scale(0.33)"></use>
+                            <use href="#chain-link-icon" fill="black" stroke="black" transform="translate(-10,-10)scale(0.33)"></use>
+                            <use href="#chain-link-icon" fill="black" stroke="black" transform="translate(6.66,-10)scale(0.33)"></use>
+
+                            <polyline stroke="black" stroke-width="2" stroke-linecap="round" points="-15,1.5 -5,1.5"></polyline>
+                            <polyline stroke="black" stroke-width="2" stroke-linecap="round" points="1.5,1.5 12,1.5"></polyline>
                         </g>
                         <g id="actor" data-template-type="node">
-                            <g transform="translate(-40,-50)">
-                                <circle fill="white" stroke="black" cx="40" cy="25" r="20"/>
-                                <path fill="white" stroke="black" d="M 0,90 l 5,-33 l 15,-12 l 5,-2 l 15,10 l 15,-10 l 5,2 l 15,12, l 5,33 z" />
-                            </g>
+                            <circle fill="white" stroke="black" cx="00" cy="-17" r="17"></circle>
+                            <path fill="white" stroke="black" d="M -30,26 c 0,-30 7,-30 16,-30 l 14,12 l 14,-12 c 9,0 16,0 16,30 z"></path>
                         </g>
                         <g id="smart-contract" data-template-type="node">
-                            <rect class="background" x="-35" y="-45" width="70" height="90" data-link-handles="edges"></rect>
-                            <g transform="translate(-35,-45)">
-                                <polygon fill="white" stroke="black" stroke-linejoin="round" points="0,0 60,0 70,10 70,90 0,90"/>
-                                <polygon fill="lightgrey" stroke="black" stroke-linejoin="round" points="60,0 60,10 70,10" />
-                            </g>
+                            <path fill="lightgrey" stroke="none" d="M 12,-30 v 8 h 8 z" />
+                            <path fill="white" stroke="black" fill-rule="nonzero" d="M -30,-30 h 42 l 8,8 v 52 h -50 z M 12,-30 v 8 h 8"></path>
                         </g>
                         <g id="transaction" data-template-type="node">
-                            <rect fill="white" stroke="black" x="-35" y="-45" width="70" height="90" data-link-handles="edges"></rect>
+                            <polygon fill="white" stroke="black" data-link-handles="edges" points="-13,-30 13,-30 30,-13 30,13 13,30 -13,30 -30,13 -30,-13" />
                         </g>
                         <g id="database" data-template-type="node">
-                            <polygon class="background" points="0,-40 25,0 0,40 -25,0" data-link-handles="corners"></polygon>
-                            <path fill="white" stroke="black" d="M-25,-30 a25,10 0 0,1 50,0 l 0,60 a25,10 0 0,1 -50,0 z" />
-                            <ellipse fill="white" stroke="black" cx="0" cy="-30" rx="25" ry="10" />
+                            <path fill="white" stroke="black" d="M -20,-23 a 20,7 0 0,1 40,0 l 0,46 a 20,7 0 0,1 -40,0 z" />
+                            <ellipse fill="white" stroke="black" cx="0" cy="-23" rx="20" ry="7" />
                         </g>
-                        <g id="arrow" data-template-type="marker" data-line-attachement-point="-9 0">
-                            <path d="M -9 -4 L 0 0 L -9 4 z" />
+                        <g id="node" data-template-type="node">
+                            <circle fill="white" stroke="black" cx="0" cy="0" r="30" />
+                        </g>
+                        <g id="block" data-template-type="node">
+                            <rect class="background" x="-30" y="-30" width="60" height="60" data-link-handles="edges"></rect>
+                            <use href="#block-icon" x="-30" y="-30" fill="white" stroke="black" />
+                        </g>
+                        <g id="wallet" data-template-type="node">
+                            <rect class="background" x="-27" y="-30" width="54" height="60" data-link-handles="edges"></rect>
+                            <path fill="white" stroke="none" d="M 25,-4 h -10 c -8,0 -8,8 0,8 h 10"></path>
+                            <path fill="white" stroke="black" fill-rule="nonzero" d="M -25,-20 h 50 v 40 h -50 z M -25,-20 l 42,-8 v 8 M 25,-4 h -10 c -8,0 -8,8 0,8 h 10"></path>
+
+                        </g>
+                        <g id="blockchain" data-template-type="node">
+                            <rect class="background" x="-27" y="-15" width="54" height="30" data-link-handles="edges"></rect>
+                            <use href="#blockchain-icon" y="-4"></use>
                         </g>
                     </defs>
                     <g class="zoom-group">

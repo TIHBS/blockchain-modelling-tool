@@ -23,6 +23,22 @@ export interface RepositoryComponent extends ProjectComponent<'repository'> {
 
 }
 
+export interface NodeComponent extends ProjectComponent<'node'> {
+
+}
+
+export interface BlockComponent extends ProjectComponent<'block'> {
+
+}
+
+export interface WalletComponent extends ProjectComponent<'wallet'> {
+
+}
+
 export interface BlockchainComponent extends ProjectComponent<'blockchain'> {
+
+}
+
+export interface GroupComponent extends ProjectComponent<'group'> {
 
 }

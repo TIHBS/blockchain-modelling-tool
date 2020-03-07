@@ -1,7 +1,7 @@
 import GraphEditor from "@ustutt/grapheditor-webcomponent/lib/grapheditor";
 import { Node } from "@ustutt/grapheditor-webcomponent/lib/node";
 import { Edge } from "@ustutt/grapheditor-webcomponent/lib/edge";
-import { ActorComponent, SmartContractComponent, TransactionComponent, RepositoryComponent, BlockchainComponent, ProjectComponent } from "project";
+import { ActorComponent, SmartContractComponent, TransactionComponent, RepositoryComponent, BlockchainComponent, ProjectComponent, NodeComponent, BlockComponent, WalletComponent, GroupComponent } from "project";
 
 export interface ActiveDiagramState {
     nodes: {
@@ -28,8 +28,20 @@ export interface ProjectComponents {
     repository: {
         [prop: string]: RepositoryComponent;
     };
+    node: {
+        [prop: string]: NodeComponent;
+    };
+    block: {
+        [prop: string]: BlockComponent;
+    };
+    wallet: {
+        [prop: string]: WalletComponent;
+    };
     blockchain: {
         [prop: string]: BlockchainComponent;
+    };
+    group: {
+        [prop: string]: GroupComponent;
     };
 
 }
@@ -67,7 +79,11 @@ export const initialState: State = {
             smartContract: {},
             transaction: {},
             repository: {},
+            node: {},
+            block: {},
+            wallet: {},
             blockchain: {},
+            group: {},
         }
     },
     selected: {
@@ -86,8 +102,16 @@ export function getProjectComponent(activeProjectComponents: ProjectComponents, 
         return activeProjectComponents.transaction[componentId];
     } else if (componentType === 'repository') {
         return activeProjectComponents.repository[componentId];
+    } else if (componentType === 'node') {
+        return activeProjectComponents.node[componentId];
+    } else if (componentType === 'block') {
+        return activeProjectComponents.block[componentId];
+    } else if (componentType === 'wallet') {
+        return activeProjectComponents.wallet[componentId];
     } else if (componentType === 'blockchain') {
         return activeProjectComponents.blockchain[componentId];
+    } else if (componentType === 'group') {
+        return activeProjectComponents.group[componentId];
     } else {
         return null;
     }
