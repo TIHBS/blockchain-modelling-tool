@@ -5,7 +5,7 @@ import { Store } from 'aurelia-store';
 import { State } from './state';
 
 import { changeActiveProject, addProjectComponent, updateProjectComponent } from './resources/state-actions/active-project-actions';
-import { addNode, removeNode, addEdge, removeEdge, selectNode, updateNode } from './resources/state-actions/active-diagram-actions';
+import { addNode, removeNode, addEdge, removeEdge, selectNode, updateNode, updateSelectedNodeLayer } from './resources/state-actions/active-diagram-actions';
 
 @autoinject()
 export class App {
@@ -22,6 +22,7 @@ export class App {
         this.store.registerAction('removeEdge', removeEdge);
 
         this.store.registerAction('selectNode', selectNode);
+        this.store.registerAction('updateSelectedNodeLayer', updateSelectedNodeLayer);
 
     }
 

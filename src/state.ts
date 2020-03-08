@@ -56,6 +56,7 @@ export interface ActiveProjectState {
 export interface SelectedState {
     selectedNode: Node;
     selectedComponent: ProjectComponent<string>;
+    selectedNodeLayer: number;
 }
 
 export interface State {
@@ -89,6 +90,7 @@ export const initialState: State = {
     selected: {
         selectedNode: null,
         selectedComponent: null,
+        selectedNodeLayer: 0,
     },
 };
 

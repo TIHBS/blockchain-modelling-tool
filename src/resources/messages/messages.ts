@@ -22,6 +22,20 @@ export class NodeTypeChangedMessage extends NodeChangedMessage {}
 
 export class NodePropertiesChangedMessage extends NodeChangedMessage {}
 
+export class NodeLayerChangedMessage {
+    readonly source: 'graph'|'property-editor';
+    readonly node: Node;
+    readonly newLayer: number;
+    readonly oldLayer: number;
+
+    constructor(node: Node, newLayer: number, oldLayer: number, source: 'graph'|'property-editor') {
+        this.source = source;
+        this.node = node;
+        this.newLayer = newLayer;
+        this.oldLayer = oldLayer;
+    }
+}
+
 export class ProjectComponentChangedMessage {
     readonly source: 'graph'|'property-editor';
     readonly newComponent: ProjectComponent<string>;

@@ -4,22 +4,31 @@ import { connectTo, Store } from 'aurelia-store';
 
 import { pluck } from 'rxjs/operators';
 
-import { State, SelectedState } from '../../state';
+import { State, SelectedState, ActiveProjectState } from '../../state';
 
 import { Node } from '@ustutt/grapheditor-webcomponent/lib/node';
 import { ProjectComponent } from 'project';
 
-import { NodeChangedMessage, ProjectComponentChangedMessage, NodePositionChangedMessage } from '../messages/messages';
+import { NodeChangedMessage, ProjectComponentChangedMessage, NodePositionChangedMessage, NodeLayerChangedMessage } from '../messages/messages';
+import GraphEditor from '@ustutt/grapheditor-webcomponent/lib/grapheditor';
 
 @autoinject()
-@connectTo<State>((store) => store.state.pipe(pluck('selected')))
+@connectTo<State>({
+    selector: {
+        activeEditor: (store) => store.state.pipe(pluck('active', 'activeEditor')),
+        selected: (store) => store.state.pipe(pluck('selected')),
+    }
+})
 export class NodeProperties {
 
     private nodeChangedSubscription: Subscription;
 
-    state: SelectedState;
+    activeEditor: GraphEditor;
+    selected: SelectedState;
 
     nodeEdit: Node;
+    currentLayer: number;
+    layers: number;
     componentEdit: ProjectComponent<string>;
 
     constructor(private store: Store<State>, private eventAggregator: EventAggregator) {}
@@ -40,7 +49,9 @@ export class NodeProperties {
         this.nodeChangedSubscription?.dispose();
     }
 
-    stateChanged(newState: SelectedState, oldState: SelectedState) {
+    selectedChanged(newState: SelectedState, oldState: SelectedState) {
+        this.currentLayer = newState.selectedNodeLayer;
+        this.layers = this.activeEditor.nodeList.length;
         if (oldState?.selectedNode != null && newState?.selectedNode != null) {
             if (oldState.selectedNode.id === newState.selectedNode.id) {
                 // selection has not changed (only values in the selected elements have changed)
@@ -55,7 +66,7 @@ export class NodeProperties {
         console.log('Node Visuals Changed', this.nodeEdit);
 
         const updatedNode = Object.assign({}, this.nodeEdit);
-        const oldNode = this.state.selectedNode;
+        const oldNode = this.selected.selectedNode;
 
         this.store.pipe('updateNode', updatedNode).dispatch();
         this.eventAggregator.publish(new NodeChangedMessage(updatedNode, oldNode, 'property-editor'));
@@ -65,9 +76,23 @@ export class NodeProperties {
         console.log('Component properties Changed', this.componentEdit);
 
         const updatedComponent = Object.assign({}, this.componentEdit);
-        const oldComponent = this.state.selectedComponent;
+        const oldComponent = this.selected.selectedComponent;
 
         this.store.pipe('updateProjectComponent', updatedComponent).dispatch();
         this.eventAggregator.publish(new ProjectComponentChangedMessage(updatedComponent, oldComponent, 'property-editor'));
+    }
+
+    changeNodeLayer(newLayer: number) {
+        if (this.selected.selectedNode == null) {
+            return;
+        }
+        if (newLayer < 0 || newLayer >= this.activeEditor.nodeList.length) {
+            return;
+        }
+        this.eventAggregator.publish(new NodeLayerChangedMessage(this.selected.selectedNode, newLayer, this.currentLayer, 'property-editor'));
+    }
+
+    removeNode() {
+        this.store.pipe('removeNode', this.selected.selectedNode).dispatch();
     }
 }

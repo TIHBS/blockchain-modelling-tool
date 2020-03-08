@@ -218,6 +218,9 @@ export class EditorSidebar {
             x: currentView.x + currentView.width/2,
             y: currentView.y + currentView.height/2,
             type: 'group',
+            dynamicTemplate: 'group',
+            width: 100,
+            height: 70,
             elementId: groupComponent.id,
         };
         this.store

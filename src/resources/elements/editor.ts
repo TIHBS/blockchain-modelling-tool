@@ -8,8 +8,9 @@ import { State, ActiveDiagramState, ActiveProjectState, getProjectComponent, Sel
 import GraphEditor from '@ustutt/grapheditor-webcomponent/lib/grapheditor'
 import { Node } from '@ustutt/grapheditor-webcomponent/lib/node';
 import { Edge } from '@ustutt/grapheditor-webcomponent/lib/edge';
-import { NodeChangedMessage, ProjectComponentChangedMessage, NodePositionChangedMessage } from 'resources/messages/messages';
+import { NodeChangedMessage, ProjectComponentChangedMessage, NodePositionChangedMessage, NodeLayerChangedMessage } from 'resources/messages/messages';
 import { Rect } from '@ustutt/grapheditor-webcomponent/lib/util';
+import { DynamicGroupTemplate, DynamicGroupBehaviour } from 'resources/graph-templates/dynamic-group';
 
 @autoinject()
 @connectTo<State>({
@@ -21,6 +22,7 @@ import { Rect } from '@ustutt/grapheditor-webcomponent/lib/util';
 export class Editor {
 
     private nodeChangedSubscription: Subscription;
+    private nodeLayerChangedSubscription: Subscription;
     private componentChangedSubscription: Subscription;
 
     public activeProject: ActiveProjectState;
@@ -36,6 +38,7 @@ export class Editor {
     constructor(private store: Store<State>, private eventAggregator: EventAggregator) {}
 
     bind() {
+        this.nodeLayerChangedSubscription = this.eventAggregator.subscribe(NodeLayerChangedMessage, (msg) => this.nodeLayerChanged(msg));
         this.nodeChangedSubscription = this.eventAggregator.subscribe(NodeChangedMessage, (msg) => this.nodeChanged(msg));
         this.componentChangedSubscription = this.eventAggregator.subscribe(ProjectComponentChangedMessage, (msg) => this.componentChanged(msg));
     }
@@ -43,6 +46,8 @@ export class Editor {
     attached() {
         this.store.dispatch('changeActiveProject', 'Playground', this.grapheditor);
 
+        this.grapheditor.dynamicTemplateRegistry.addDynamicTemplate('group', new DynamicGroupTemplate());
+        this.minimap.dynamicTemplateRegistry.addDynamicTemplate('group', new DynamicGroupTemplate());
 
         this.grapheditor.onCreateDraggedEdge = (edge) => {
             if (edge.createdFrom == null || edge.createdFrom == undefined) {
@@ -50,6 +55,10 @@ export class Editor {
             }
             return edge
         }
+
+        this.grapheditor.addEventListener('groupjoin', (event: CustomEvent) => {
+            console.log(event.detail)
+        });
 
         this.grapheditor.addEventListener('nodeclick', (event: CustomEvent) => {
             const node = event.detail.node;
@@ -86,6 +95,12 @@ export class Editor {
         });
         this.grapheditor.addEventListener('noderemove', (event: CustomEvent) => {
             this.minimap.removeNode(event.detail.node);
+        });
+        this.grapheditor.addEventListener('edgeadd', (event: CustomEvent) => {
+            this.minimap.addEdge(event.detail.edge);
+        });
+        this.grapheditor.addEventListener('edgeremove', (event: CustomEvent) => {
+            this.minimap.removeEdge(event.detail.edge);
         });
         this.grapheditor.addEventListener('render', (event: CustomEvent) => {
             if (event.detail.rendered === 'complete') {
@@ -144,6 +159,12 @@ export class Editor {
                 }
                 this.componentToNode.get(node.elementId).add(node.id.toString());
                 this.grapheditor.addNode(node);
+                if (node.type === 'group') {
+                    console.log('A GROUP')
+                    this.grapheditor.groupingManager.markAsTreeRoot(node.id);
+                    this.grapheditor.groupingManager.setGroupBehaviourOf(node.id, new DynamicGroupBehaviour());
+                    console.log(this.grapheditor.groupingManager.getGroupBehaviourOf(node.id), new DynamicGroupBehaviour())
+                }
                 hasChanged = true;
             }
         });
@@ -163,6 +184,7 @@ export class Editor {
         if (hasChanged) {
             this.grapheditor.completeRender();
             this.grapheditor.zoomToBoundingBox();
+            this.store.dispatch('updateSelectedNodeLayer');
         }
     }
 
@@ -192,6 +214,55 @@ export class Editor {
         if (msg.newNode.x !== msg.oldNode.x || msg.newNode.y !== msg.oldNode.y) {
             this.grapheditor.moveNode(node.id, msg.newNode.x, msg.newNode.y, true);
         }
+    }
+
+    nodeLayerChanged(msg: NodeLayerChangedMessage) {
+        if (msg.source === 'graph') {
+            return;
+        }
+        const nodes = this.grapheditor.nodeList;
+        const minimapNodes = this.minimap.nodeList;
+
+        if (nodes[msg.oldLayer]?.id !== msg.node.id) {
+            return; // ignore messages that don't fit the current state!
+        }
+
+        let needRender = false;
+
+        const newIndex = Math.max(0, Math.min(nodes.length - 1, msg.newLayer));
+
+        if (Math.abs(newIndex - msg.oldLayer) == 1) {
+            // only move one step
+            const temp = nodes[msg.oldLayer];
+            nodes[msg.oldLayer] = nodes[newIndex];
+            nodes[newIndex] = temp;
+            const mintemp = minimapNodes[msg.oldLayer];
+            minimapNodes[msg.oldLayer] = minimapNodes[newIndex];
+            minimapNodes[newIndex] = mintemp;
+            needRender = true;
+        } else if (newIndex === 0) {
+            const temp = nodes[msg.oldLayer];
+            nodes.splice(msg.oldLayer, 1);
+            nodes.unshift(temp);
+            const mintemp = minimapNodes[msg.oldLayer];
+            minimapNodes.splice(msg.oldLayer, 1);
+            minimapNodes.unshift(mintemp);
+            needRender = true;
+        } else if (newIndex === nodes.length -1) {
+            const temp = nodes[msg.oldLayer];
+            nodes.splice(msg.oldLayer, 1);
+            nodes.push(temp);
+            const mintemp = minimapNodes[msg.oldLayer];
+            minimapNodes.splice(msg.oldLayer, 1);
+            minimapNodes.push(mintemp);
+            needRender = true;
+        }
+
+        if (needRender) {
+            this.grapheditor.completeRender();
+        }
+
+        this.store.dispatch('updateSelectedNodeLayer');
     }
 
     componentChanged(msg: ProjectComponentChangedMessage) {

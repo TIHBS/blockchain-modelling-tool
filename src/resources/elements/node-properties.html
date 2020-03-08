@@ -1,6 +1,13 @@
 <template>
     <details open="true">
         <summary class="pa2 b">Visual Properties:</summary>
+        <div class="flex w-100">
+            <button disabled.bind="nodeEdit == null || currentLayer === 0" click.delegate="changeNodeLayer(0)">BG</button>
+            <button disabled.bind="nodeEdit == null || currentLayer === 0" click.delegate="changeNodeLayer(currentLayer - 1)">Down</button>
+            <button disabled.bind="nodeEdit == null || currentLayer + 1 === layers" click.delegate="changeNodeLayer(currentLayer + 1)">Up</button>
+            <button disabled.bind="nodeEdit == null || currentLayer + 1 === layers" click.delegate="changeNodeLayer(layers - 1)">FG</button>
+            <button disabled.bind="nodeEdit == null" click.delegate="removeNode()">Remove</button>
+        </div>
         <form>
             <div class="pa2 w-100">
                 <label>

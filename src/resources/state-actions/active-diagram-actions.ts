@@ -10,17 +10,37 @@ export const selectNode = (state: State, node?: Node) => {
         newState.selected = {
             selectedNode: null,
             selectedComponent: null,
+            selectedNodeLayer: 0,
         };
         return newState;
     }
 
+    const nodeLayer = newState.active.activeEditor?.nodeList?.findIndex(n => n.id === node.id) ?? 0;
 
     newState.selected = {
         selectedNode: state.active.activeDiagram.nodes[node.id],
         selectedComponent: getProjectComponent(state.active.activeProjectComponents, node.elementId),
+        selectedNodeLayer: Math.max(0, nodeLayer),
     };
 
     return newState;
+}
+
+export const updateSelectedNodeLayer = (state: State) => {
+    const newState = Object.assign({}, state);
+
+    if (newState.selected.selectedNode != null) {
+        const node = newState.selected.selectedNode;
+        const nodeLayer = newState.active.activeEditor?.nodeList?.findIndex(n => n.id === node.id) ?? 0;
+
+        newState.selected = {
+            ...state.selected,
+            selectedNodeLayer: Math.max(0, nodeLayer),
+        };
+    }
+
+    return newState;
+
 }
 
 export const addNode = (state: State, node: Node) => {
@@ -67,6 +87,16 @@ export const removeNode = (state: State, node: Node) => {
         newState.selected = {
             selectedNode: null,
             selectedComponent: null,
+            selectedNodeLayer: 0,
+        };
+    }
+
+    if (newState.selected?.selectedNode != null) {
+        const selectedNode = newState.selected?.selectedNode;
+        const nodeLayer = newState.active.activeEditor?.nodeList?.findIndex(n => n.id === selectedNode.id) ?? 0;
+        newState.selected = {
+            ...state.selected,
+            selectedNodeLayer: Math.max(0, nodeLayer),
         };
     }
 

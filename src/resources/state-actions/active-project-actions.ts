@@ -36,6 +36,7 @@ export const changeActiveProject = (state: State, projectName: string, editor: G
     newState.selected = {
         selectedNode: null,
         selectedComponent: null,
+        selectedNodeLayer: 0,
     };
 
     return newState;
