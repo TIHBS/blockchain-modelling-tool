@@ -105,6 +105,7 @@
                     <style>
                         .node {fill: white;}
                         .link-handle {display: none;}
+                        .background {opacity: 0;}
                         rect.minimap {
                             fill: orange;
                             opacity: 0.5;
@@ -134,10 +135,12 @@
                             <path fill="white" stroke="black" d="M -20,-10 c 0,0 5,-5 15,-5 l 0,-2 l 10,0 l 0,2 c 10,0 15,5 15,5 c 0,0 -5,-2 -15,-2 l 0,1 l -10,0 l 0,-1 c -10,0 -15,2 -15,2 z"></path>
                         </g>
                         <g id="actor" data-template-type="node">
+                            <rect class="background" x="-32" y="-36" width="64" height="72" data-link-handles="edges"></rect>
                             <circle fill="white" stroke="black" cx="00" cy="-17" r="17"></circle>
                             <path fill="white" stroke="black" d="M -30,26 c 0,-30 7,-30 16,-30 l 14,12 l 14,-12 c 9,0 16,0 16,30 z"></path>
                         </g>
                         <g id="smart-contract" data-template-type="node">
+                            <rect class="background" x="-30" y="-30" width="50" height="60" data-link-handles="edges"></rect>
                             <path fill="lightgrey" stroke="none" d="M 12,-30 v 8 h 8 z" />
                             <path fill="white" stroke="black" fill-rule="nonzero" d="M -30,-30 h 42 l 8,8 v 52 h -50 z M 12,-30 v 8 h 8"></path>
                         </g>
@@ -145,6 +148,7 @@
                             <polygon fill="white" stroke="black" data-link-handles="edges" points="-13,-30 13,-30 30,-13 30,13 13,30 -13,30 -30,13 -30,-13" />
                         </g>
                         <g id="database" data-template-type="node">
+                            <polygon class="background" points="0,-30 20,0 0,30 -20,0" data-link-handles="corners"></polygon>
                             <path fill="white" stroke="black" d="M -20,-23 a 20,7 0 0,1 40,0 l 0,46 a 20,7 0 0,1 -40,0 z" />
                             <ellipse fill="white" stroke="black" cx="0" cy="-23" rx="20" ry="7" />
                         </g>
