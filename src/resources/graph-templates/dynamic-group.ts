@@ -41,6 +41,11 @@ export class DynamicGroupBehaviour implements GroupBehaviour {
     allowDraggedNodesLeavingGroup = true;
 
     afterNodeJoinedGroup(group: string, childGroup: string, groupNode: Node, childNode: Node, graphEditor: GraphEditor, atPosition?: Point) {
+        this.reposition(group, groupNode, graphEditor);
+    }
+
+    afterNodeLeftGroup(group: string, childGroup: string, groupNode: Node, childNode: Node, graphEditor: GraphEditor) {
+        this.reposition(group, groupNode, graphEditor);
     }
 
     onNodeMoveEnd(group: string, childGroup: string, groupNode: Node, childNode: Node, graphEditor: GraphEditor) {
@@ -48,35 +53,25 @@ export class DynamicGroupBehaviour implements GroupBehaviour {
     }
 
     reposition(group: string, groupNode: Node, graphEditor: GraphEditor) {
+        if (groupNode.fixSize ?? false) {
+            // don't adjust size if requested by node
+            return;
+        }
         const children = graphEditor.groupingManager.getAllChildrenOf(group);
-        const boxes: Rect[] = [{
-            x: groupNode.x - (groupNode.width / 2) + 5,
-            y: groupNode.y - (groupNode.height / 2) + 5,
-            width: groupNode.width - 5,
-            height: groupNode.height - 5,
-        }];
+        const boxes: Rect[] = [];
 
         children.forEach(childId => {
             const node = graphEditor.getNode(childId);
-            if (node == null) {
-                return;
-            }
-
-            if (node.width != null && node.height != null) {
-                boxes.push({
-                    x: node.x - (node.width / 2),
-                    y: node.y - (node.height / 2),
-                    width: node.width,
-                    height: node.height,
-                });
+            const bbox = graphEditor.getNodeBBox(childId);
+            if (node == null || bbox == null) {
                 return;
             }
 
             boxes.push({
-                x: node.x - 30,
-                y: node.y - 30,
-                width: 60,
-                height: 60,
+                x: node.x + bbox.x,
+                y: node.y + bbox.y,
+                width: bbox.width,
+                height: bbox.height,
             });
         });
 
@@ -84,16 +79,36 @@ export class DynamicGroupBehaviour implements GroupBehaviour {
             return;
         }
 
+        const padding = Math.max(0, groupNode.padding ?? 10);
+
         const minBox = calculateBoundingRect(...boxes);
-        if (minBox.width + 10 < groupNode.width && minBox.height + 10 < groupNode.height) {
-            return;
+        minBox.x -= padding / 2;
+        minBox.y -= padding / 2;
+        minBox.width += padding;
+        minBox.height += padding;
+
+        const minSizedBox = {
+            ...minBox,
+            width: Math.max(100, minBox.width),
+            height: Math.max(70, minBox.height),
         }
+
+        const left = groupNode.x - (groupNode.width / 2);
+        const top = groupNode.y - (groupNode.height / 2);
+        if (minSizedBox.x > left) {
+            minSizedBox.x = Math.max(left, minSizedBox.x - (minSizedBox.width - minBox.width));
+        }
+        if (minSizedBox.y > top) {
+            minSizedBox.y = Math.max(top, minSizedBox.y - (minSizedBox.height - minBox.height));
+        }
+
         const center: Point = {
-            x: minBox.x + (minBox.width / 2),
-            y: minBox.y + (minBox.height / 2),
+            x: minSizedBox.x + (minSizedBox.width / 2),
+            y: minSizedBox.y + (minSizedBox.height / 2),
         };
-        groupNode.width = minBox.width + 10;
-        groupNode.height = minBox.height + 10;
+
+        groupNode.width = minSizedBox.width;
+        groupNode.height = minSizedBox.height;
         groupNode.x = center.x;
         groupNode.y = center.y;
         graphEditor.moveNode(group, center.x, center.y);

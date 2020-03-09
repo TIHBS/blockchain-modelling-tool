@@ -11,16 +11,19 @@ export const selectNode = (state: State, node?: Node) => {
             selectedNode: null,
             selectedComponent: null,
             selectedNodeLayer: 0,
+            selectedNodeGroup: null,
         };
         return newState;
     }
 
     const nodeLayer = newState.active.activeEditor?.nodeList?.findIndex(n => n.id === node.id) ?? 0;
+    const nodeGroup = newState.active.activeEditor?.groupingManager?.getTreeParentOf(node.id);
 
     newState.selected = {
         selectedNode: state.active.activeDiagram.nodes[node.id],
         selectedComponent: getProjectComponent(state.active.activeProjectComponents, node.elementId),
         selectedNodeLayer: Math.max(0, nodeLayer),
+        selectedNodeGroup: nodeGroup,
     };
 
     return newState;
@@ -40,7 +43,22 @@ export const updateSelectedNodeLayer = (state: State) => {
     }
 
     return newState;
+}
 
+export const updateSelectedNodeGroup = (state: State) => {
+    const newState = Object.assign({}, state);
+
+    if (newState.selected.selectedNode != null) {
+        const node = newState.selected.selectedNode;
+        const nodeGroup = newState.active.activeEditor?.groupingManager?.getTreeParentOf(node.id);
+
+        newState.selected = {
+            ...state.selected,
+            selectedNodeGroup: nodeGroup,
+        };
+    }
+
+    return newState;
 }
 
 export const addNode = (state: State, node: Node) => {
@@ -88,6 +106,7 @@ export const removeNode = (state: State, node: Node) => {
             selectedNode: null,
             selectedComponent: null,
             selectedNodeLayer: 0,
+            selectedNodeGroup: null,
         };
     }
 

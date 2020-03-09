@@ -36,6 +36,20 @@ export class NodeLayerChangedMessage {
     }
 }
 
+export class NodeGroupChangedMessage {
+    readonly source: 'graph'|'property-editor';
+    readonly node: Node;
+    readonly newGroup: string;
+    readonly oldGroup: string;
+
+    constructor(node: Node, newGroup: string, oldGroup: string, source: 'graph'|'property-editor') {
+        this.source = source;
+        this.node = node;
+        this.newGroup = newGroup;
+        this.oldGroup = oldGroup;
+    }
+}
+
 export class ProjectComponentChangedMessage {
     readonly source: 'graph'|'property-editor';
     readonly newComponent: ProjectComponent<string>;

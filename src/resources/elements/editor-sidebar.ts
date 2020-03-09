@@ -50,6 +50,7 @@ export class EditorSidebar {
             x: currentView.x + currentView.width/2,
             y: currentView.y + currentView.height/2,
             type: 'actor',
+            labelPosition: 'below',
             elementId: actorComponent.id,
         };
         this.store
@@ -71,6 +72,7 @@ export class EditorSidebar {
             x: currentView.x + currentView.width/2,
             y: currentView.y + currentView.height/2,
             type: 'smart-contract',
+            labelPosition: 'inside',
             elementId: smartContractComponent.id,
         };
         this.store
@@ -92,6 +94,7 @@ export class EditorSidebar {
             x: currentView.x + currentView.width/2,
             y: currentView.y + currentView.height/2,
             type: 'transaction',
+            labelPosition: 'inside',
             elementId: transactionComponent.id,
         };
         this.store
@@ -113,6 +116,7 @@ export class EditorSidebar {
             x: currentView.x + currentView.width/2,
             y: currentView.y + currentView.height/2,
             type: 'database',
+            labelPosition: 'inside',
             elementId: repositoryComponent.id,
         };
         this.store
@@ -128,12 +132,14 @@ export class EditorSidebar {
             type: 'node',
             id: uuidv4(),
             title: 'Node',
+            icon: '',
         };
         const node: Node = {
             id: uuidv4(),
             x: currentView.x + currentView.width/2,
             y: currentView.y + currentView.height/2,
             type: 'node',
+            labelPosition: 'inside',
             elementId: nodeComponent.id,
         };
         this.store
@@ -155,6 +161,7 @@ export class EditorSidebar {
             x: currentView.x + currentView.width/2,
             y: currentView.y + currentView.height/2,
             type: 'block',
+            labelPosition: 'inside',
             elementId: blockComponent.id,
         };
         this.store
@@ -176,6 +183,7 @@ export class EditorSidebar {
             x: currentView.x + currentView.width/2,
             y: currentView.y + currentView.height/2,
             type: 'wallet',
+            labelPosition: 'below',
             elementId: walletComponent.id,
         };
         this.store
@@ -197,6 +205,7 @@ export class EditorSidebar {
             x: currentView.x + currentView.width/2,
             y: currentView.y + currentView.height/2,
             type: 'blockchain',
+            labelPosition: 'below',
             elementId: blockchainComponent.id,
         };
         this.store
@@ -218,9 +227,12 @@ export class EditorSidebar {
             x: currentView.x + currentView.width/2,
             y: currentView.y + currentView.height/2,
             type: 'group',
+            labelPosition: 'hidden',
             dynamicTemplate: 'group',
             width: 100,
             height: 70,
+            padding: 20,
+            fixSize: false,
             elementId: groupComponent.id,
         };
         this.store

@@ -11,9 +11,12 @@
         <form>
             <div class="pa2 w-100">
                 <label>
-                    <span class="">Type:</span>
+                    <span class="">Group:</span>
                     <div class="mt2">
-                        <input class="w-100" name="type" type="text" value.bind="nodeEdit.type" input.delegate="nodeEditChanged() & debounce:800"/>
+                        <select class="w-100" value.bind="currentGroup" change.delegate="changeGroup()">
+                            <option value.bind="noGroup">None</option>
+                            <option repeat.for="group of groups" value.bind="group.id">${group.name}</option>
+                        </select>
                     </div>
                 </label>
             </div>
@@ -31,6 +34,45 @@
                     </div>
                 </label>
             </div>
+            <div class="pa2 w-100">
+                <label class="w-100 inline-flex items-center">
+                    <span class="mr2">label:</span>
+                    <div class="flex-grow-1">
+                        <select class="w-100" value.bind="nodeEdit.labelPosition" change.delegate="nodeEditChanged()">
+                            <option value.bind="'hidden'">hidden</option>
+                            <option value.bind="'inside'">inside</option>
+                            <option value.bind="'below'">below</option>
+                            <option value.bind="'above'">above</option>
+                        </select>
+                    </div>
+                </label>
+            </div>
+            <template if.bind="nodeEdit != null && nodeEdit.type === 'group'">
+                <div class="pa2 w-100">
+                    <label class="inline-flex items-center">
+                        <span class="mr2">width:</span>
+                        <div class="flex-grow-1">
+                            <input class="w-100" name="width" type="number" value.bind="nodeEdit.width" input.delegate="nodeEditChanged() & debounce:300"/>
+                        </div>
+                    </label>
+                </div>
+                <div class="pa2 w-100">
+                    <label class="inline-flex items-center">
+                        <span class="mr2">height:</span>
+                        <div class="flex-grow-1">
+                            <input class="w-100" name="height" type="number" value.bind="nodeEdit.height" input.delegate="nodeEditChanged() & debounce:300"/>
+                        </div>
+                    </label>
+                </div>
+                <div class="pa2 w-100">
+                    <label class="inline-flex items-center" click.delegate="nodeEditChanged() & debounce:300">
+                        <span class="mr2">fix size:</span>
+                        <div class="flex-grow-1">
+                            <input type="checkbox" name="fix-size" checked.bind="nodeEdit.fixSize" />
+                        </div>
+                    </label>
+                </div>
+            </template>
         </form>
     </details>
 
@@ -45,6 +87,16 @@
                     </div>
                 </label>
             </div>
+            <template if.bind="componentEdit != null && componentEdit.type === 'node'">
+                <div class="pa2 w-100">
+                    <label>
+                        <span class="">Icon:</span>
+                        <div class="mt2">
+                            <input class="w-100" name="icon" type="text" value.bind="componentEdit.icon" input.delegate="componentEditChanged() & debounce:300"/>
+                        </div>
+                    </label>
+                </div>
+            </template>
         </form>
     </details>
 </template>

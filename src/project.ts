@@ -24,7 +24,7 @@ export interface RepositoryComponent extends ProjectComponent<'repository'> {
 }
 
 export interface NodeComponent extends ProjectComponent<'node'> {
-
+    icon: string;
 }
 
 export interface BlockComponent extends ProjectComponent<'block'> {

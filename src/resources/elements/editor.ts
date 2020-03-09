@@ -8,7 +8,7 @@ import { State, ActiveDiagramState, ActiveProjectState, getProjectComponent, Sel
 import GraphEditor from '@ustutt/grapheditor-webcomponent/lib/grapheditor'
 import { Node } from '@ustutt/grapheditor-webcomponent/lib/node';
 import { Edge } from '@ustutt/grapheditor-webcomponent/lib/edge';
-import { NodeChangedMessage, ProjectComponentChangedMessage, NodePositionChangedMessage, NodeLayerChangedMessage } from 'resources/messages/messages';
+import { NodeChangedMessage, ProjectComponentChangedMessage, NodePositionChangedMessage, NodeLayerChangedMessage, NodeGroupChangedMessage } from 'resources/messages/messages';
 import { Rect } from '@ustutt/grapheditor-webcomponent/lib/util';
 import { DynamicGroupTemplate, DynamicGroupBehaviour } from 'resources/graph-templates/dynamic-group';
 
@@ -23,6 +23,7 @@ export class Editor {
 
     private nodeChangedSubscription: Subscription;
     private nodeLayerChangedSubscription: Subscription;
+    private nodeGroupChangedSubscription: Subscription;
     private componentChangedSubscription: Subscription;
 
     public activeProject: ActiveProjectState;
@@ -38,8 +39,9 @@ export class Editor {
     constructor(private store: Store<State>, private eventAggregator: EventAggregator) {}
 
     bind() {
-        this.nodeLayerChangedSubscription = this.eventAggregator.subscribe(NodeLayerChangedMessage, (msg) => this.nodeLayerChanged(msg));
         this.nodeChangedSubscription = this.eventAggregator.subscribe(NodeChangedMessage, (msg) => this.nodeChanged(msg));
+        this.nodeLayerChangedSubscription = this.eventAggregator.subscribe(NodeLayerChangedMessage, (msg) => this.nodeLayerChanged(msg));
+        this.nodeGroupChangedSubscription = this.eventAggregator.subscribe(NodeGroupChangedMessage, (msg) => this.nodeGroupChanged(msg));
         this.componentChangedSubscription = this.eventAggregator.subscribe(ProjectComponentChangedMessage, (msg) => this.componentChanged(msg));
     }
 
@@ -49,6 +51,15 @@ export class Editor {
         this.grapheditor.dynamicTemplateRegistry.addDynamicTemplate('group', new DynamicGroupTemplate());
         this.minimap.dynamicTemplateRegistry.addDynamicTemplate('group', new DynamicGroupTemplate());
 
+        this.grapheditor.setNodeClass = (className: string, node: Node) => {
+            if (className.startsWith('label-')) {
+                if (className.endsWith(node.labelPosition)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         this.grapheditor.onCreateDraggedEdge = (edge) => {
             if (edge.createdFrom == null || edge.createdFrom == undefined) {
                 edge.markerEnd = {template: 'arrow', positionOnLine: 1, scale: 0.5, relativeRotation: 0};
@@ -57,7 +68,15 @@ export class Editor {
         }
 
         this.grapheditor.addEventListener('groupjoin', (event: CustomEvent) => {
-            console.log(event.detail)
+            if (this.selectedNode?.id === event.detail.childGroup) {
+                this.store.dispatch('updateSelectedNodeGroup');
+            }
+        });
+
+        this.grapheditor.addEventListener('groupleave', (event: CustomEvent) => {
+            if (this.selectedNode?.id === event.detail.childGroup) {
+                this.store.dispatch('updateSelectedNodeGroup');
+            }
         });
 
         this.grapheditor.addEventListener('nodeclick', (event: CustomEvent) => {
@@ -123,6 +142,8 @@ export class Editor {
     unbind() {
         this.store.dispatch('changeActiveProject', null, null);
         this.nodeChangedSubscription?.dispose();
+        this.nodeLayerChangedSubscription?.dispose();
+        this.nodeGroupChangedSubscription?.dispose();
         this.componentChangedSubscription?.dispose();
     }
 
@@ -160,10 +181,8 @@ export class Editor {
                 this.componentToNode.get(node.elementId).add(node.id.toString());
                 this.grapheditor.addNode(node);
                 if (node.type === 'group') {
-                    console.log('A GROUP')
                     this.grapheditor.groupingManager.markAsTreeRoot(node.id);
                     this.grapheditor.groupingManager.setGroupBehaviourOf(node.id, new DynamicGroupBehaviour());
-                    console.log(this.grapheditor.groupingManager.getGroupBehaviourOf(node.id), new DynamicGroupBehaviour())
                 }
                 hasChanged = true;
             }
@@ -263,6 +282,32 @@ export class Editor {
         }
 
         this.store.dispatch('updateSelectedNodeLayer');
+    }
+
+    nodeGroupChanged(msg: NodeGroupChangedMessage) {
+        if (msg.source === 'graph') {
+            return;
+        }
+
+        const gm = this.grapheditor.groupingManager;
+        const  oldGroup = gm.getTreeParentOf(msg.node.id);
+        if (oldGroup !== msg.oldGroup) {
+            return; // discard messages with inconsistent information
+        }
+        if (oldGroup != null) {
+            gm.removeNodeFromGroup(oldGroup, msg.node.id);
+            if (msg.newGroup == null || msg.newGroup === '') {
+                // don't join a new group
+                if (msg.node.type === 'group') {
+                    gm.markAsTreeRoot(msg.node.id);
+                }
+                return;
+            }
+        }
+
+        if (this.grapheditor.getNode(msg.newGroup)?.type === 'group') {
+            gm.addNodeToGroup(msg.newGroup, msg.node.id);
+        }
     }
 
     componentChanged(msg: ProjectComponentChangedMessage) {
