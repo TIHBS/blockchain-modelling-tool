@@ -48,8 +48,8 @@ export class Editor {
     attached() {
         this.store.dispatch('changeActiveProject', 'Playground', this.grapheditor);
 
-        this.grapheditor.dynamicTemplateRegistry.addDynamicTemplate('group', new DynamicGroupTemplate());
-        this.minimap.dynamicTemplateRegistry.addDynamicTemplate('group', new DynamicGroupTemplate());
+        this.grapheditor.dynamicTemplateRegistry.addDynamicTemplate('group', new DynamicGroupTemplate(true));
+        this.minimap.dynamicTemplateRegistry.addDynamicTemplate('group', new DynamicGroupTemplate(false));
 
         this.grapheditor.setNodeClass = (className: string, node: Node) => {
             if (className.startsWith('label-')) {
@@ -81,9 +81,6 @@ export class Editor {
 
         this.grapheditor.addEventListener('nodeclick', (event: CustomEvent) => {
             const node = event.detail.node;
-            if (this.grapheditor.selected.has(node.id)) {
-                return;
-            }
             event.preventDefault();
             if (this.selectedNode?.id === node.id) {
                 // unselect on selecting again
@@ -212,9 +209,9 @@ export class Editor {
             return;
         }
         if (newSelected == null) {
-            this.grapheditor.changeSelected(new Set());
+            this.grapheditor.changeSelected(new Set(), true);
         } else {
-            this.grapheditor.changeSelected(new Set([newSelected.id as string]));
+            this.grapheditor.changeSelected(new Set([newSelected.id as string]), true);
         }
     }
 

@@ -8,8 +8,16 @@ import { Rect, calculateBoundingRect } from '@ustutt/grapheditor-webcomponent/li
 
 
 export class DynamicGroupTemplate implements DynamicNodeTemplate {
+
+    private withText: boolean;
+
+    constructor(withText: boolean) {
+        this.withText = withText;
+    }
+
     renderInitialTemplate(g: any, grapheditor: GraphEditor, context: DynamicTemplateContext<Node>): void {
         g.append('rect')
+            .classed('select-outline', true)
             .attr('x', (d) => -(d.width / 2))
             .attr('y', (d) => -(d.height / 2))
             .attr('width', (d) => d.width)
@@ -18,6 +26,13 @@ export class DynamicGroupTemplate implements DynamicNodeTemplate {
             .attr('stroke', 'black')
             .attr('fill', 'white')
             .attr('stroke-dasharray', '4');
+        if (this.withText) {
+            g.append('text')
+                .classed('text', true)
+                .classed('text, label', true)
+                .attr('width', (d) => d.width - 8)
+                .attr('data-content', 'element.title');
+        }
     }
 
     updateTemplate(g: any, grapheditor: GraphEditor, context: DynamicTemplateContext<Node>): void {
@@ -26,6 +41,19 @@ export class DynamicGroupTemplate implements DynamicNodeTemplate {
             .attr('y', (d) => -(d.height / 2))
             .attr('width', (d) => d.width)
             .attr('height', (d) => d.height);
+        if (this.withText) {
+            g.select('text')
+                .attr('x', (d) => 4 - (d.width / 2))
+                .attr('y', (d) => {
+                    if (d.labelPosition === 'below') {
+                        return 8 + (d.height / 2);
+                    }
+                    if (d.labelPosition === 'above') {
+                        return -3 - (d.height / 2);
+                    }
+                    return 10 - (d.height / 2);
+                })
+        }
     }
 
     getLinkHandles(g: any, grapheditor: GraphEditor): LinkHandle[] {

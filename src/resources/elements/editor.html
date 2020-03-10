@@ -6,6 +6,7 @@
                 <style>
                     .ghost {opacity: 0.5;}
                     .node {fill: white;}
+                    .node.selected .select-outline {stroke: blue;}
                     .link-handle {display: none; fill: black; opacity: 0.1;}
                     .link-handle>* {transition:transform 0.25s ease-out;}
                     .edge-group .link-handle {display: initial}
@@ -33,9 +34,9 @@
                         <path fill="black" stroke="none" d="M 18,25 h 14 c 15,0 15,20 0,20 h -14 c -15,0 -15,-20 0,-20 z M 18,40 h 14 c 7,0 7,-10 0,-10 h -14 c -7,0 -7,10 0,10 z"></path>
                     </g>
                     <g id="blockchain-icon">
-                        <use href="#block-icon" fill="white" stroke="black" transform="translate(-26.66,-10)scale(0.33)" stroke-width="3"></use>
-                        <use href="#block-icon" fill="white" stroke="black" transform="translate(-10,-10)scale(0.33)" stroke-width="3"></use>
-                        <use href="#block-icon" fill="white" stroke="black" transform="translate(6.66,-10)scale(0.33)" stroke-width="3"></use>
+                        <use href="#block-icon" transform="translate(-26.66,-10)scale(0.33)" stroke-width="3"></use>
+                        <use href="#block-icon" transform="translate(-10,-10)scale(0.33)" stroke-width="3"></use>
+                        <use href="#block-icon" transform="translate(6.66,-10)scale(0.33)" stroke-width="3"></use>
 
                         <use href="#chain-link-icon" fill="black" stroke="none" transform="translate(-26.66,-10)scale(0.33)"></use>
                         <use href="#chain-link-icon" fill="black" stroke="black" transform="translate(-10,-10)scale(0.33)"></use>
@@ -50,46 +51,46 @@
                     </g>
                     <g id="actor" data-template-type="node">
                         <rect class="background" x="-32" y="-36" width="64" height="72" data-link-handles="edges"></rect>
-                        <circle class="content" style="--label-inside-y: 4px; --label-above-y: 8px;" fill="white" stroke="black" cx="00" cy="-17" r="17"></circle>
-                        <path class="content" style="--label-inside-y: 4px; --label-above-y: 8px;" fill="white" stroke="black" d="M -30,26 c 0,-30 7,-30 16,-30 l 14,12 l 14,-12 c 9,0 16,0 16,30 z"></path>
+                        <circle class="content select-outline" style="--label-inside-y: 4px; --label-above-y: 8px;" fill="white" stroke="black" cx="00" cy="-17" r="17"></circle>
+                        <path class="content select-outline" style="--label-inside-y: 4px; --label-above-y: 8px;" fill="white" stroke="black" d="M -30,26 c 0,-30 7,-30 16,-30 l 14,12 l 14,-12 c 9,0 16,0 16,30 z"></path>
                         <text class="text centered label" style="--label-inside-y: -10px; --label-above-y: -62px;" data-content="element.title" x="0" y="34" width="60"></text>
                     </g>
                     <g id="smart-contract" data-template-type="node">
                         <rect class="background" x="-30" y="-30" width="50" height="60" data-link-handles="edges"></rect>
                         <path fill="lightgrey" stroke="none" d="M 12,-30 v 8 h 8 z" />
-                        <path fill="white" stroke="black" fill-rule="nonzero" d="M -30,-30 h 42 l 8,8 v 52 h -50 z M 12,-30 v 8 h 8"></path>
-                        <text class="text" data-content="element.title" x="-28" y="-15" width="46" height="46"></text>
+                        <path class="select-outline" fill="white" stroke="black" fill-rule="nonzero" d="M -30,-30 h 42 l 8,8 v 52 h -50 z M 12,-30 v 8 h 8"></path>
+                        <text class="text label" data-content="element.title" x="-28" y="-15" width="46" height="46"></text>
                     </g>
                     <g id="transaction" data-template-type="node">
-                        <polygon fill="white" stroke="black" data-link-handles="edges" points="-13,-30 13,-30 30,-13 30,13 13,30 -13,30 -30,13 -30,-13" />
-                        <text class="text centered" data-content="element.title" x="0" y="-8" width="56" height="28"></text>
+                        <polygon class="select-outline" fill="white" stroke="black" data-link-handles="edges" points="0,-22 22,-5 14,22 -14,22 -22,-5" />
+                        <text class="text centered label" data-content="element.title" x="0" y="0" width="36" height="28"></text>
                     </g>
                     <g id="database" data-template-type="node">
                         <polygon class="background" points="0,-30 20,0 0,30 -20,0" data-link-handles="corners"></polygon>
-                        <path fill="white" stroke="black" d="M -20,-23 a 20,7 0 0,1 40,0 l 0,46 a 20,7 0 0,1 -40,0 z" />
-                        <ellipse fill="white" stroke="black" cx="0" cy="-23" rx="20" ry="7" />
-                        <text class="text centered" data-content="element.title" x="0" y="2" width="36" height="20"></text>
+                        <path class="select-outline" fill="white" stroke="black" d="M -20,-23 a 20,7 0 0,1 40,0 l 0,46 a 20,7 0 0,1 -40,0 z" />
+                        <ellipse class="select-outline" fill="white" stroke="black" cx="0" cy="-23" rx="20" ry="7" />
+                        <text class="text centered label" data-content="element.title" x="0" y="2" width="36" height="20"></text>
                     </g>
                     <g id="node" data-template-type="node">
-                        <circle fill="white" stroke="black" cx="0" cy="0" r="30" />
-                        <use data-href="element.icon" x="0" y="0" transform="scale(0.8)"></use>
+                        <circle class="select-outline" fill="white" stroke="black" cx="0" cy="0" r="30" />
+                        <use data-href="element.icon" x="0" y="0" fill="white" stroke="black" transform="scale(0.8)"></use>
                         <text class="text centered label" style="--label-below-y: 37px; --label-above-y: -34px;" data-content="element.title" x="0" y="2" width="56"></text>
                     </g>
                     <g id="block" data-template-type="node">
                         <rect class="background" x="-30" y="-30" width="60" height="60" data-link-handles="edges"></rect>
-                        <use href="#block-icon" x="-30" y="-30" fill="white" stroke="black" />
-                        <text class="text" data-content="element.title" x="-28" y="-10" width="46" height="45"></text>
+                        <use class="select-outline" href="#block-icon" x="-30" y="-30" fill="white" stroke="black" />
+                        <text class="text label" data-content="element.title" x="-28" y="-10" width="46" height="45"></text>
                     </g>
                     <g id="wallet" data-template-type="node">
                         <rect class="background" x="-27" y="-30" width="54" height="60" data-link-handles="edges"></rect>
                         <path fill="white" stroke="none" d="M 25,-4 h -10 c -8,0 -8,8 0,8 h 10"></path>
-                        <path fill="white" stroke="black" fill-rule="nonzero" d="M -25,-20 h 50 v 40 h -50 z M -25,-20 l 42,-8 v 8 M 25,-4 h -10 c -8,0 -8,8 0,8 h 10"></path>
-                        <text class="text centered" data-content="element.title" x="0" y="28" width="46"></text>
+                        <path class="select-outline" fill="white" stroke="black" fill-rule="nonzero" d="M -25,-20 h 50 v 40 h -50 z M -25,-20 l 42,-8 v 8 M 25,-4 h -10 c -8,0 -8,8 0,8 h 10"></path>
+                        <text class="text centered label" data-content="element.title" x="0" y="28" width="46"></text>
                     </g>
                     <g id="blockchain" data-template-type="node">
                         <rect class="background" x="-27" y="-15" width="54" height="30" data-link-handles="edges"></rect>
-                        <use href="#blockchain-icon" y="-4"></use>
-                        <text class="text centered" data-content="element.title" x="0" y="13" width="46"></text>
+                        <use class="select-outline" href="#blockchain-icon" fill="white" stroke="black" y="-4"></use>
+                        <text class="text centered label" data-content="element.title" x="0" y="13" width="46"></text>
                     </g>
                     <g id="arrow" data-template-type="marker" data-line-attachement-point="-9 0">
                         <path d="M -9 -4 L 0 0 L -9 4 z" />
@@ -107,9 +108,6 @@
             <network-graph ref="minimap" mode="display" zoom="both" classes="test">
                 <svg slot="graph">
                     <style>
-                        .node {fill: white;}
-                        .link-handle {display: none;}
-                        .background {opacity: 0;}
                         rect.minimap {
                             fill: orange;
                             opacity: 0.5;
@@ -149,7 +147,7 @@
                             <path fill="white" stroke="black" fill-rule="nonzero" d="M -30,-30 h 42 l 8,8 v 52 h -50 z M 12,-30 v 8 h 8"></path>
                         </g>
                         <g id="transaction" data-template-type="node">
-                            <polygon fill="white" stroke="black" data-link-handles="edges" points="-13,-30 13,-30 30,-13 30,13 13,30 -13,30 -30,13 -30,-13" />
+                            <polygon fill="white" stroke="black" data-link-handles="edges" points="0,-22 22,-5 14,22 -14,22 -22,-5" />
                         </g>
                         <g id="database" data-template-type="node">
                             <polygon class="background" points="0,-30 20,0 0,30 -20,0" data-link-handles="corners"></polygon>
