@@ -8,11 +8,11 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@ustutt/grapheditor-webcomponent": "^0.5.2",
+    "@ustutt/grapheditor-webcomponent": "^0.5.4",
     "aurelia-animator-css": "^1.0.4",
     "aurelia-bootstrapper": "^2.3.3",
-    "aurelia-store": "^1.5.0",
-    "uuid": "^7.0.2"
+    "aurelia-store": "^1.6.0",
+    "uuid": "^8.0.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.9",
