@@ -1,5 +1,4 @@
 # blockchain-modelling-tool
 
-
-https://ieeexplore.ieee.org/document/5353439
-
+A prototype for modelling blockchain software architectures.
+Based on https://github.com/TIHBS/blockchain-diagram-symbols.
